@@ -87,9 +87,9 @@ module Engine
 
         @game.company_bought(company, entity)
 
-        @log << "#{entity.name} buys #{company.name} from "\
-                "#{owner.nil? ? 'the market' : owner.name} for "\
-                "#{@game.format_currency(price)}"
+        @log.action! "buys #{company.name} from "\
+                     "#{owner.nil? ? 'the market' : owner.name} for "\
+                     "#{@game.format_currency(price)}"
         log_later.each { |l| @log << l }
       end
 

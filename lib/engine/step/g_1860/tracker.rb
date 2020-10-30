@@ -133,8 +133,7 @@ module Engine
 
             token.remove!
           end
-          @log << "#{spender.name}"\
-            "#{cost.zero? ? '' : " spends #{@game.format_currency(cost)} and"}"\
+          @log.action! "#{cost.zero? ? '' : " spends #{@game.format_currency(cost)} and"}"\
             " lays tile ##{tile.name}"\
             " with rotation #{rotation} on #{hex.name}"\
             "#{tile.location_name.to_s.empty? ? '' : " (#{tile.location_name})"}"
