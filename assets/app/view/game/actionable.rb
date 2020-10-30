@@ -131,7 +131,7 @@ module View
         store(:selected_action_id, nil, skip: true)
       end
 
-      def history_link(text, title, action_id = nil, style_extra = {}, as_button = false)
+      def history_link(text, title, action_id = nil)
         route = Lib::Params.add(@app_route, 'action', action_id)
 
         click = lambda do
@@ -141,19 +141,17 @@ module View
           clear_ui_state
         end
 
-        props = {
+        h(
+          Link,
           href: route,
           click: click,
           title: title,
           children: text,
           style: {
-            margin: '0',
-            **style_extra,
+            color: 'currentColor',
+            textDecoration: 'none',
           },
-        }
-        props[:class] = '.button_link' if as_button
-
-        h(Link, props)
+        )
       end
     end
   end
