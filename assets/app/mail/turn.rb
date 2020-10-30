@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_tree 'engine'
-require_relative '../view/game/game_log'
+require_relative '../view/log'
 require_relative '../view/game/players'
 require_relative '../view/game/spreadsheet'
 
@@ -19,7 +19,7 @@ class Turn < Snabberb::Component
 
     h(:div, [
       render_link,
-      h(View::Game::GameLog, limit: 10),
+      h(View::Log, log: @game.log.last(20)),
       h(View::Game::Players, game: @game),
       h(View::Game::Spreadsheet, game: @game),
     ])

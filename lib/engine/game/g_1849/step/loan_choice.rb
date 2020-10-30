@@ -53,10 +53,10 @@ module Engine
             player = action.entity
 
             if action.choice == 'Leave game'
-              @log << "#{player.name} chooses to leave game"
+              @log.action! 'chooses to leave game'
               @game.declare_bankrupt(player)
             else
-              @log << "#{player.name} chooses to take #{@game.format_currency(500)} loan
+              @log.action! "chooses to take #{@game.format_currency(500)} loan
                      and reduce #{@game.format_currency(750)} from their score."
               @game.bank.spend(500, player)
               @game.player_debts[player] += 750

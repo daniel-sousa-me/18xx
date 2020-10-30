@@ -52,7 +52,7 @@ module Engine
             corp = action.entity
 
             if action.choice == 'Close SMS'
-              @log << "#{corp.id} closes SMS"
+              @log.action! 'closes SMS'
               @sms.close!
               corp.sms_hexes = @game.sms_hexes
             end
