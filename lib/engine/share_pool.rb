@@ -48,8 +48,8 @@ module Engine
       par_price = corporation.par_price&.price
 
       if ipoed != corporation.ipoed
-        @log << "#{entity.name} pars #{corporation.name} at "\
-                "#{@game.format_currency(par_price)}"
+        @log.action! "pars #{corporation.name} at "\
+                     "#{@game.format_currency(par_price)}"
       end
 
       share_str = "a #{bundle.percent}% share "
@@ -67,20 +67,20 @@ module Engine
         price = exchange_price || 0
         case exchange
         when :free
-          @log << "#{entity.name} receives #{share_str}"
+          @log.action! "receives #{share_str}"
         when Company
-          @log << if exchange_price
-                    "#{entity.name} exchanges #{exchange.name} and #{@game.format_currency(price)}"\
-                    " from #{from} for #{share_str}"
-                  else
-                    "#{entity.name} exchanges #{exchange.name} from #{from} for #{share_str}"
-                  end
+          if exchange_price
+            @log.action! "exchanges #{exchange.name} and #{@game.format_currency(price)}"\
+                         " from #{from} for #{share_str}"
+          else
+            @log.action! "exchanges #{exchange.name} from #{from} for #{share_str}"
+          end
         end
       else
         price -= swap.price if swap
         swap_text = swap ? " + swap of a #{swap.percent}% share" : ''
         verb = entity == corporation ? 'redeems' : 'buys'
-        @log << "#{entity.name} #{verb} #{share_str} "\
+        @log.action! "#{verb} #{share_str} "\
           "from #{from} "\
           "for #{@game.format_currency(price)}#{swap_text}"
       end
@@ -120,7 +120,7 @@ module Engine
       swap_text = swap ? " and a #{swap.percent}% share" : ''
       swap_to_entity = swap ? entity : nil
 
-      @log << "#{entity.name} #{verb} #{num_presentation(bundle)} " \
+      @log.action! "#{verb} #{num_presentation(bundle)} " \
         "of #{bundle.corporation.name} and receives #{@game.format_currency(price)}#{swap_text}"
 
       transfer_shares(bundle,
