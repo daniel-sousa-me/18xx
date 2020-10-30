@@ -131,7 +131,7 @@ module View
         store(:selected_action_id, nil, skip: true)
       end
 
-      def history_link(text, title, action_id = nil, style_extra = {}, as_button = false, hotkey = nil)
+      def history_link(text, title, action_id = nil, hotkey = nil)
         route = Lib::Params.add(@app_route, 'action', action_id)
 
         click = lambda do
@@ -141,20 +141,17 @@ module View
           clear_ui_state
         end
 
-        props = {
-          href: route,
-          click: click,
-          title: "#{title}#{' – hotkey: ' + hotkey if hotkey}",
-          children: text,
-          style: {
-            margin: '0',
-            **style_extra,
-          },
-          class: "#hist_#{hotkey}",
-        }
-        props[:class] += '.button_link' if as_button
-
-        h(Link, props)
+        h(Link, {
+            href: route,
+            click: click,
+            title: "#{title}#{' – hotkey: ' + hotkey if hotkey}",
+            children: text,
+            style: {
+              color: 'currentColor',
+              textDecoration: 'none',
+            },
+            class: "#hist_#{hotkey}",
+          })
       end
     end
   end
