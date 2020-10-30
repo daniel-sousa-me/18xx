@@ -24,7 +24,7 @@ module Engine
           return unless (mine_revenue = @game.mines_total(entity)).positive?
 
           @game.bank.spend(mine_revenue, entity)
-          @log << "#{entity.name} collects #{@game.format_currency(mine_revenue)} from mines"
+          @log.action! "collects #{@game.format_currency(mine_revenue)} from mines"
         end
 
         def close_companies_on_run_train!(entity)
