@@ -51,14 +51,13 @@ module Engine
 
           def process_choose(action)
             choice = action.choice
-            entity = action.entity
 
             if choice == 'Two 10% certs'
-              @log << "#{entity.name} chooses two 10% certificates"
+              @log.action! 'chooses two 10% certificates'
               @game.share_pool.swap_double_cert(@game.swap_location, @game.swap_other_player,
                                                 @game.swap_corporation)
             else
-              @log << "#{entity.name} chooses the 20% last certificate"
+              @log.action! 'chooses the 20% last certificate'
             end
             @game.swap_choice_player = nil
             @game.swap_location = nil
