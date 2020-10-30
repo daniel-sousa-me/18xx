@@ -14,7 +14,7 @@ module Engine
         entity = game.get(h['entity_type'], h['entity']) || Player.new(nil, h['entity'])
         obj = new(entity, **h_to_args(h, game))
         obj.user = h['user'] if entity.player && h['user'] != entity.player&.id
-        obj.created_at = h['created_at'] || Time.now
+        obj.created_at = Time.at(h['created_at']) if h['created_at'].is_a?(Integer)
         obj.auto_actions = (h['auto_actions'] || []).map { |auto_h| Base.action_from_h(auto_h, game) }
         obj
       end
@@ -35,6 +35,7 @@ module Engine
 
       def initialize(entity)
         @entity = entity
+        # Overwritten by from_h unless this action is directly created
         @created_at = Time.now
         @auto_actions = []
       end
@@ -54,7 +55,7 @@ module Engine
           'entity_type' => type_s(entity),
           'id' => @id,
           'user' => @user,
-          'created_at' => @created_at.to_i,
+          'created_at' => @created_at&.to_i,
           'auto_actions' => @auto_actions.empty? ? nil : @auto_actions.map(&:to_h),
           **args_to_h,
         }.reject { |_, v| v.nil? }

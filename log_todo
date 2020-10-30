@@ -1,0 +1,12 @@
+Consequences and events
+What to do with consequences that happen before the action?
+Maybe consequences can have children
+How to show game setup stuff?
+There's a line for each train that is running
+Pay/withhold/half is not making much sense
+Buying a share after the auction is not an action
+1817: log pick of corp size?
+18MEX: @log << "-- #{major.name} merges into #{ndm.name} --"
+
+
+Maybe move things to the action class?
