@@ -131,7 +131,7 @@ module View
         store(:selected_action_id, nil, skip: true)
       end
 
-      def history_link(text, title, action_id = nil, style_extra = {}, as_button = false)
+      def history_link(text, title, action_id = nil)
         route = Lib::Params.add(@app_route, 'action', action_id)
 
         click = lambda do
@@ -148,13 +148,35 @@ module View
           children: text,
           style: {
             textDecoration: 'none',
-            **style_extra,
           },
         }
-        props['class'] = '.button_link' if as_button
 
         h(Link, props)
       end
+    end
+
+    def history_link(text, title, action_id = nil, style_extra = {})
+      route = Lib::Params.add(@app_route, 'action', action_id)
+
+      click = lambda do
+        store(:round_history, @game.round_history, skip: true) unless @round_history
+        store(:round_history, nil, skip: true) unless action_id
+        store(:app_route, route)
+        clear_ui_state
+      end
+
+      h(
+        Link,
+        href: route,
+        click: click,
+        title: title,
+        children: text,
+        style: {
+          color: 'currentColor',
+          textDecoration: 'none',
+          **style_extra,
+        },
+      )
     end
   end
 end
