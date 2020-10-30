@@ -10,6 +10,7 @@ module Engine
       def initialize(entity, message:)
         super(entity)
         @message = message
+        # @created_at = Time.now # Needed when sending a message
       end
 
       def self.h_to_args(h, _)
