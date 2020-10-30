@@ -23,7 +23,7 @@ module Engine
               # Subtract 15 from the cost cancelling the terrain cost
               lay_tile(action, extra_cost: tile_lay[:cost] - 15, entity: owner, spender: owner)
               tile.hex.assign!('mine')
-              @game.log << "#{owner.name} adds mine to #{tile.hex.name}"
+              @game.log.action! "adds mine to #{tile.hex.name}"
               ability = abilities(action.entity)
               ability.use!
               action.entity.close! if ability.count.zero?
