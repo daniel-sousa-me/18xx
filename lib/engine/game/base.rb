@@ -12,6 +12,7 @@ else
   require_rel '../step'
 end
 
+require_relative '../logger'
 require_relative '../bank'
 require_relative '../company'
 require_relative '../corporation'
@@ -76,7 +77,7 @@ module Engine
     class Base
       include Game::Meta
 
-      attr_reader :raw_actions, :actions, :bank, :cert_limit, :cities, :companies, :corporations,
+      attr_reader :raw_actions, :current_action, :actions, :bank, :cert_limit, :cities, :companies, :corporations,
                   :depot, :finished, :graph, :hexes, :id, :loading, :loans, :log, :minors,
                   :phase, :players, :operating_rounds, :round, :share_pool, :stock_market, :tile_groups,
                   :tiles, :turn, :total_loans, :undo_possible, :redo_possible, :round_history, :all_tiles,
@@ -629,9 +630,7 @@ module Engine
       end
 
       def process_single_action(action)
-        if action.user
-          @log << "• Action(#{action.type}) via Master Mode by: #{player_by_id(action.user)&.name || 'Owner'}"
-        end
+        @current_action = action
 
         preprocess_action(action)
 
@@ -1438,17 +1437,6 @@ module Engine
 
       def train_help(_runnable_trains)
         []
-      end
-
-      def queue_log!
-        old_size = @log.size
-        yield
-        @queued_log = @log.pop(@log.size - old_size)
-      end
-
-      def flush_log!
-        @queued_log.each { |l| @log << l }
-        @queued_log = []
       end
 
       # This is a hook to allow game specific logic to be invoked after a company is bought
