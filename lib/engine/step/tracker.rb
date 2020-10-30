@@ -107,7 +107,7 @@ module Engine
           free = true if ability.free_tile_lay
           if ability.cost
             spender.spend(ability.cost, @game.bank) if ability.cost.positive?
-            @log << "#{spender.name} spends #{@game.format_currency(ability.cost)} and teleports to #{hex.name}"
+            @log.action! "spends #{@game.format_currency(ability.cost)} and teleports to #{hex.name}"
           end
 
           ability.use!
@@ -170,9 +170,7 @@ module Engine
         try_take_loan(spender, cost)
         spender.spend(cost, @game.bank) if cost.positive?
 
-        @log << "#{spender.name}"\
-          "#{spender == entity ? '' : " (#{entity.sym})"}"\
-          "#{cost.zero? ? '' : " spends #{@game.format_currency(cost)} and"}"\
+        @log.action! "#{cost.zero? ? '' : " spends #{@game.format_currency(cost)} and"}"\
           " lays tile ##{tile.name}"\
           " with rotation #{rotation} on #{hex.name}"\
           "#{tile.location_name.to_s.empty? ? '' : " (#{tile.location_name})"}"
