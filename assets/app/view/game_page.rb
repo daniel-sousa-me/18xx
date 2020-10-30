@@ -405,7 +405,7 @@ module View
 
       h('div.game', [
         render_round,
-        h(Game::GameLog, user: @user, scroll_pos: @scroll_pos),
+        h(Game::GameLog, user: @user),
         h(Game::HistoryAndUndo, num_actions: @num_actions),
         h(Game::EntityOrder, round: @round),
         h(Game::Abilities, user: @user, game: @game),
