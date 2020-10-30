@@ -37,7 +37,7 @@ module Engine
       def preprocess_action(action)
         case action
         when Action::LayTile
-          queue_log! do
+          @log.queue! do
             check_special_tile_lay(action, baltimore)
             check_special_tile_lay(action, columbia)
           end
@@ -47,7 +47,7 @@ module Engine
       def action_processed(action)
         case action
         when Action::LayTile
-          flush_log!
+          @log.flush!
         end
       end
 

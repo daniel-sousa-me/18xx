@@ -27,12 +27,12 @@ module Engine
         actions
       end
 
-      def log_pass(entity)
-        return @log << "#{entity.name} passes" if @current_actions.empty?
+      def log_pass(_entity)
+        return @log.action! 'passes' if @current_actions.empty?
         return if bought? && sold?
 
         action = bought? ? 'to sell' : 'to buy'
-        @log << "#{entity.name} declines #{action} shares"
+        @log.action! "declines #{action} shares"
       end
 
       def log_skip(entity)
@@ -239,8 +239,9 @@ module Engine
         entity.companies << company
         entity.spend(price, owner.nil? ? @game.bank : owner)
         @current_actions << action
-        @log << "#{owner ? '-- ' : ''}#{entity.name} buys #{company.name} from "\
-                "#{owner ? owner.name : 'the market'} for #{@game.format_currency(price)}"
+
+        seller_name = owner ? owner.name : 'the market'
+        @log.action! "buys #{company.name} from #{seller_name} for #{@game.format_currency(price)}"
       end
     end
   end

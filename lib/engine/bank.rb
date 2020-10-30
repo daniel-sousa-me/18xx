@@ -12,7 +12,7 @@ module Engine
 
     attr_reader :companies
 
-    def initialize(cash, log: [], check: true)
+    def initialize(cash, log: Logger.new)
       @cash = cash
       @log = log
       @broken = false
