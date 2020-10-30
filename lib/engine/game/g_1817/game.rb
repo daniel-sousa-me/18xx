@@ -1295,7 +1295,7 @@ module Engine
           short.buyable = false
           short.counts_for_limit = false
 
-          @log << "#{entity.name} shorts a #{percent}% " \
+          @log.action! "shorts a #{percent}% " \
             "share of #{corporation.name} for #{format_currency(price)}"
 
           @bank.spend(price, entity)
@@ -1318,9 +1318,7 @@ module Engine
           raise GameError, "Cannot take more than #{maximum_loans(entity)} loans" unless can_take_loan?(entity)
 
           price = entity.share_price.price
-          name = entity.name
-          name += " (#{entity.owner.name})" if @round.is_a?(Engine::Round::Stock)
-          @log << "#{name} takes a loan and receives #{format_currency(loan.amount)}"
+          @log.action! "takes a loan and receives #{format_currency(loan.amount)}"
           @bank.spend(loan.amount, entity)
           @stock_market.move_left(entity)
           log_share_price(entity, price)
