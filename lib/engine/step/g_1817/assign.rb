@@ -21,7 +21,7 @@ module Engine
 
             target.assign!(id)
             ability.use!
-            @log << "#{company.name} builds bridge on #{target.name}"
+            @log.action! "builds bridge on #{target.name}"
           end
         end
       end
