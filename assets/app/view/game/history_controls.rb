@@ -17,10 +17,9 @@ module View
 
         divs = [h('b.margined', 'History')]
         cursor = Lib::Params['action']&.to_i
-        style_extra = { padding: '0 1rem' }
 
         unless cursor&.zero?
-          divs << history_link('|<', 'Start', 0, style_extra)
+          divs << link('|<', 'Start', 0)
 
           last_round =
             if cursor == @game.raw_actions.size
@@ -28,7 +27,7 @@ module View
             else
               @game.round_history[-1]
             end
-          divs << history_link('<<', 'Previous Round', last_round, style_extra) if last_round
+          divs << link('<<', 'Previous Round', last_round) if last_round
 
           prev_action =
             if @game.exception
@@ -38,18 +37,22 @@ module View
             else
               @num_actions - 1
             end
-          divs << history_link('<', 'Previous Action', prev_action, style_extra)
+          divs << link('<', 'Previous Action', prev_action)
         end
 
         if cursor && !@game.exception
-          divs << history_link('>', 'Next Action', cursor + 1 < @num_actions ? cursor + 1 : nil, style_extra)
+          divs << link('>', 'Next Action', cursor + 1 < @num_actions ? cursor + 1 : nil)
           store(:round_history, @game.round_history, skip: true) unless @round_history
           next_round = @round_history[@game.round_history.size]
-          divs << history_link('>>', 'Next Round', next_round, style_extra) if next_round
-          divs << history_link('>|', 'Current', nil, style_extra)
+          divs << link('>>', 'Next Round', next_round) if next_round
+          divs << link('>|', 'Current', nil)
         end
 
         h(:div, divs)
+      end
+
+      def link(text, title, action_id)
+        h(:span, { style: { marginRight: '2rem' } }, [history_link(text, title, action_id)])
       end
     end
   end
