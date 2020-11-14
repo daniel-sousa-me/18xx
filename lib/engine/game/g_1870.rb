@@ -57,7 +57,7 @@ module Engine
           Step::Track,
           Step::Token,
           Step::Route,
-          Step::Dividend,
+          Step::G1870::Dividend,
           Step::BuyTrain,
           [Step::BuyCompany, blocks: true],
           # Step::ConnectionRun,
