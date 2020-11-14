@@ -26,6 +26,8 @@ module Engine
       EBUY_PRES_SWAP = false
       EBUY_OTHER_VALUE = false
 
+      CLOSED_CORP_TRAINS = :discarded
+
       TILE_LAYS = [{ lay: true, upgrade: true, cost: 0 }, { lay: :not_if_upgraded, upgrade: false, cost: 0 }].freeze
 
       STOCKMARKET_COLORS = Base::STOCKMARKET_COLORS.merge(unlimited: :green).merge(close: :white).merge(ignore_one_sale: :orange).freeze
@@ -65,6 +67,10 @@ module Engine
       def init_stock_market
         Engine::G1870::StockMarket.new(self.class::MARKET, self.class::CERT_LIMIT_TYPES,
                                        multiple_buy_types: self.class::MULTIPLE_BUY_TYPES)
+      end
+
+      def corporation_opts
+        { can_hold_above_max: true }
       end
 
       def sell_shares_and_change_price(bundle)
