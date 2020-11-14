@@ -27,6 +27,9 @@ module View
           @auctioning_corporation = @step.auctioning_corporation if @step.respond_to?(:auctioning_corporation)
           @selected_corporation ||= @auctioning_corporation
 
+          @price_protection = @step.protecting_bundle if @step.respond_to?('protecting_bundle')
+          @selected_corporation ||= @price_protection&.corporation
+
           @current_entity = @step.current_entity
           if @last_player != @current_entity && !@auctioning_corporation
             store(:selected_corporation, nil, skip: true)
@@ -41,6 +44,8 @@ module View
                           h('div.margined', 'Must sell stock: above 60% limit in corporation(s)')
                         end
           end
+
+          children << render_protect(@price_protection.corporation) if @price_protection
 
           children.concat(render_corporations)
           children.concat(render_player_companies) if @current_actions.include?('sell_company')
@@ -62,6 +67,7 @@ module View
 
           @game.sorted_corporations.reject(&:closed?).map do |corporation|
             next if @auctioning_corporation && @auctioning_corporation != corporation
+            next if @price_protection && @price_protection.corporation != corporation
 
             children = []
             children.concat(render_subsidiaries)
@@ -192,6 +198,14 @@ module View
           [h(:button,
              { on: { click: buy } },
              "Buy #{@selected_company.sym} from Bank for #{@game.format_currency(company.value)}")]
+        end
+
+        def render_protect(_corporation)
+          h(:div, [h(
+            :button,
+            { on: { click: -> { process_action(Engine::Action::Protect.new(@current_entity)) } } },
+            'Protect',
+          )])
         end
       end
     end
