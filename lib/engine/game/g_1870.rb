@@ -30,7 +30,7 @@ module Engine
 
       TILE_LAYS = [{ lay: true, upgrade: true, cost: 0 }, { lay: :not_if_upgraded, upgrade: false, cost: 0 }].freeze
 
-      STOCKMARKET_COLORS = Base::STOCKMARKET_COLORS.merge(unlimited: :green).merge(close: :white).merge(ignore_one_sale: :orange).freeze
+      STOCKMARKET_COLORS = Base::STOCKMARKET_COLORS.merge(unlimited: :green).merge(par: :white).merge(ignore_one_sale: :red).freeze
 
       EVENTS_TEXT = Base::EVENTS_TEXT.merge('remove_tokens' => ['Remove Tokens', 'Remove private company tokens']).freeze
       MARKET_TEXT = Base::MARKET_TEXT.merge(ignore_one_sale: 'Can only enter when 2 shares sold at the same time').freeze
