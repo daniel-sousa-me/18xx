@@ -11,9 +11,15 @@ module Engine
           return [] if !entity.player? || entity != current_entity
 
           actions = []
-          actions << 'buy_shares' if can_buy?(entity, price_protection)
+          actions << 'buy_shares' if can_buy?(president, price_protection)
           actions << 'pass' if actions.any?
           actions
+        end
+
+        def setup
+          while price_protection && !can_buy?(president, price_protection)
+            process_pass(nil, true)
+          end
         end
 
         def description
@@ -29,7 +35,11 @@ module Engine
         end
 
         def price_protection
-          @round.sell_queue[0]
+          @round.sell_queue.dig(0, 'bundle')
+        end
+
+        def president
+          @round.sell_queue.dig(0, 'president')
         end
 
         def can_sell?
@@ -42,13 +52,17 @@ module Engine
 
           entity.cash >= bundle.price &&
             !@round.players_sold[entity][bundle.corporation] &&
+            entity == president &&
             @game.num_certs(entity) + bundle.num_shares <= @game.cert_limit
         end
 
-        def process_buy_shares(action)
-          bundle = @round.sell_queue.shift
+        def shift
+          @round.sell_queue.shift.values_at('bundle', 'president')
+        end
 
-          player = action.entity
+        def process_buy_shares(action)
+          return unless price_protection
+          bundle, player = shift
           price = bundle.price
 
           @game.share_pool.transfer_shares(
@@ -59,6 +73,9 @@ module Engine
             price: price
           )
 
+          @round.pass_order.delete(player)
+          player.unpass!
+
           @round.goto_entity!(player)
 
           num_presentation = @game.share_pool.num_presentation(bundle)
@@ -66,17 +83,11 @@ module Engine
                   "#{bundle.corporation.name} for #{@game.format_currency(price)}"
         end
 
-        def skip!(action)
-          return process_pass(action, true) if price_protection
-
-          super
-        end
-
         def process_pass(_action, forced = false)
-          bundle = @round.sell_queue.shift
+          return unless price_protection
+          bundle, player = shift
 
           corporation = bundle.corporation
-          player = bundle.president
           price = corporation.share_price.price
 
           previous_ignore = corporation.share_price.type == :ignore_one_sale
@@ -99,9 +110,7 @@ module Engine
         end
 
         def active_entities
-          return [] unless @round.sell_queue.any?
-
-          @round.sell_queue.map(&:president)
+          @round.sell_queue.map { |q| q['president'] }
         end
       end
     end

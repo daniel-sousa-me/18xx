@@ -74,7 +74,7 @@ module Engine
       end
 
       def sell_shares_and_change_price(bundle)
-        @round.sell_queue << bundle
+        @round.sell_queue << {bundle: bundle, president: bundle.president}
 
         @share_pool.sell_shares(bundle)
       end
