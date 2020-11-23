@@ -65,7 +65,7 @@ module Engine
 
           player = entity.owner
           player.spend(remaining, entity)
-          @log << "#{player.name} contributes #{@game.format_currency(remaining)}"
+          @log.action! "contributes #{@game.format_currency(remaining)}"
         end
 
         try_take_loan(entity, price)
@@ -79,7 +79,7 @@ module Engine
 
         source = @depot.discarded.include?(train) ? 'The Discard' : train.owner.name
 
-        @log << "#{entity.name} #{verb} a #{train.name} train for "\
+        @log.action! "#{verb} a #{train.name} train for "\
           "#{@game.format_currency(price)} from #{source}"
 
         @game.buy_train(entity, train, price)

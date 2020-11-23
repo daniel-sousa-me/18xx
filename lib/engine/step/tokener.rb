@@ -62,11 +62,7 @@ module Engine
         raise GameError, 'Token already placed this turn' if !extra_action && @round.tokened
 
         token, ability = adjust_token_price_ability!(entity, token, hex, city, special_ability: special_ability)
-        tokener = entity.name
-        if ability
-          tokener += " (#{ability.owner.sym})" if ability.owner != entity
-          entity.remove_ability(ability)
-        end
+        entity.remove_ability(ability) if ability
 
         raise GameError, 'Token is already used' if token.used
 
@@ -86,9 +82,9 @@ module Engine
         when :neutral
           entity.tokens.delete(token)
           token.corporation.tokens << token
-          @log << "#{tokener} places a neutral token on #{hex.name}#{price_log}"
+          @log.action! "places a neutral token on #{hex.name}#{price_log}"
         else
-          @log << "#{tokener} places a token on #{hex.name} (#{hex.location_name})#{price_log}"
+          @log.action! "places a token on #{hex.name} (#{hex.location_name})#{price_log}"
         end
 
         @round.tokened = true unless extra_action

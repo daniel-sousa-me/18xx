@@ -32,8 +32,8 @@ module View
       PAD = 4                                     # between box contents and border
       BORDER = 1
       WIDTH_TOTAL = 50                            # of entire box, including border
-      TOKEN_SIZE = 25
-      TOKEN_SIZES = { small: 25, medium: 32, large: 40 }.freeze
+      TOKEN_SIZE = 28
+      TOKEN_SIZES = { small: 20, medium: 24, large: 28 }.freeze
 
       # 1D markets
       VERTICAL_TOKEN_PAD = 4                      # vertical space between tokens
@@ -132,13 +132,14 @@ module View
       end
 
       def token_props(corporation, index = nil, num = nil, spacing = nil)
+        margin = (TOKEN_SIZE - TOKEN_SIZES[@game.corporation_size(corporation)]) / 2
         props = {
           attrs: {
             src: logo_for_user(corporation),
             title: corporation.name,
             width: "#{TOKEN_SIZES[@game.corporation_size(corporation)]}px",
           },
-          style: { marginTop: "#{VERTICAL_TOKEN_PAD}px" },
+          style: { margin: "#{margin + VERTICAL_TOKEN_PAD}px #{margin}px #{margin}px #{margin}px" },
         }
         if index
           props[:attrs][:width] = "#{TOKEN_SIZE}px"
@@ -170,6 +171,12 @@ module View
       end
 
       def grid_1d
+        token_height = @game.stock_market.market.first.map do |p|
+          (p.corporations.size + 1) * TOKEN_SIZE + VERTICAL_TOKEN_PAD
+        end.max
+        box_height = token_height + VERTICAL_TOKEN_PAD + PRICE_HEIGHT + 2 * PAD
+        height = "#{box_height - 2 * PAD - 2 * BORDER}px"
+
         row = @game.stock_market.market.first.map do |price|
           tokens = price.corporations.map { |corporation| h(:img, token_props(corporation)) }
 

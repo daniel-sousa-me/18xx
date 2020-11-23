@@ -136,7 +136,7 @@ module Engine
             free = true if ability.free_tile_lay
             if ability.cost&.positive?
               spender.spend(ability.cost, @game.bank)
-              @log << "#{spender.name} (#{ability.owner.sym}) spends #{@game.format_currency(ability.cost)} "\
+              @log.action! "spends #{@game.format_currency(ability.cost)} "\
                       "and teleports to #{hex.name} (#{hex.location_name})"
             end
           else
@@ -208,13 +208,11 @@ module Engine
         @game.update_tile_lists(tile, old_tile)
       end
 
-      def pay_tile_cost!(entity, tile, rotation, hex, spender, cost, _extra_cost)
+      def pay_tile_cost!(_entity, tile, rotation, hex, spender, cost, _extra_cost)
         try_take_loan(spender, cost)
         spender.spend(cost, @game.bank) if cost.positive?
 
-        @log << "#{spender.name}"\
-          "#{spender == entity || !entity.company? ? '' : " (#{entity.sym})"}"\
-          "#{cost.zero? ? '' : " spends #{@game.format_currency(cost)} and"}"\
+        @log.action! "#{cost.zero? ? '' : " spends #{@game.format_currency(cost)} and"}"\
           " lays tile ##{tile.name}"\
           " with rotation #{rotation} on #{hex.name}"\
           "#{tile.location_name.to_s.empty? ? '' : " (#{tile.location_name})"}"

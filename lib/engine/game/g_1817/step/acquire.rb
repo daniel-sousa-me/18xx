@@ -123,7 +123,7 @@ module Engine
             entity = action.entity
             loan = action.loan
             amount = loan.amount
-            @log << "#{entity.name} pays off a loan for #{@game.format_currency(amount)}"
+            @log.action! "pays off a loan for #{@game.format_currency(amount)}"
             entity.spend(amount, @game.bank)
 
             entity.loans.delete(loan)
@@ -136,17 +136,17 @@ module Engine
 
           def process_pass(action)
             if @offer
-              @game.log << "#{@offer.owner.name} declines to put #{@offer.name} up for sale"
+              @game.log.action! "declines to put #{@offer.name} up for sale"
               @round.offering.delete(@offer)
               @offer = nil
               setup_auction
             elsif @buyer && can_take_loan?(@buyer)
               @passed_take_loans = true
-              @game.log << "#{@buyer.name} passes taking additional loans"
+              @game.log.action! 'passes taking additional loans'
               acquire_post_loan
             elsif @buyer
               @passed_payoff_loans = true
-              @game.log << "#{@buyer.name} passes paying off additional loans"
+              @game.log.action! 'passes paying off additional loans'
               acquire_post_loan
             else
               pass_auction(action.entity)
@@ -455,13 +455,12 @@ module Engine
           end
 
           def process_bid(action)
-            entity = action.entity
             corporation = action.corporation
             price = action.price
 
             raise GameError, "Bid #{price} is not a multple of 10" unless (price % 10).zero?
 
-            @log << "#{entity.name} bids #{@game.format_currency(price)} for #{corporation.name}"
+            @log.action! "bids #{@game.format_currency(price)} for #{corporation.name}"
             add_bid(action)
             resolve_bids
           end
@@ -471,7 +470,7 @@ module Engine
             raise GameError, "Can only assign if offering for sale #{corporation.name}" unless @mode == :offered
             raise GameError, "Can only offer up #{@offer.name}" unless corporation == @offer
 
-            @game.log << "#{corporation.name} is offered at auction, buying corporation will receive "\
+            @game.log.action! 'is offered at auction, buying corporation will receive '\
               "#{@game.format_currency(treasury_share_compensation(corporation))} for treasury shares"
             @offer = nil
             auction_entity(corporation)

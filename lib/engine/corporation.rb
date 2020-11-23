@@ -26,7 +26,7 @@ module Engine
                   :type, :floatable, :original_par_price, :reservation_color, :min_price, :ipo_owner,
                   :always_market_price
     attr_reader :companies, :name, :full_name, :fraction_shares, :id, :needs_token_to_par,
-                :presidents_share
+                :presidents_share, :always_market_price
     attr_writer :par_price, :share_price
 
     SHARES = ([20] + Array.new(8, 10)).freeze
@@ -144,6 +144,10 @@ module Engine
 
     def num_treasury_shares
       num_shares_of(self)
+    end
+
+    def num_ipo_non_reserved_shares
+      num_ipo_shares - num_ipo_reserved_shares
     end
 
     def num_player_shares

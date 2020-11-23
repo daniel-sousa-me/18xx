@@ -74,15 +74,15 @@ module Engine
         @game.bank.spend(amount, entity) if amount.positive?
       end
 
-      def log_run_payout(entity, kind, revenue, action, payout)
+      def log_run_payout(_entity, kind, revenue, action, payout)
         unless Dividend::DIVIDEND_TYPES.include?(kind)
-          @log << "#{entity.name} runs for #{@game.format_currency(revenue)} and pays #{action.kind}"
+          @log.action! "runs for #{@game.format_currency(revenue)} and pays #{action.kind}"
         end
 
         if payout[:corporation].positive?
-          @log << "#{entity.name} withholds #{@game.format_currency(payout[:corporation])}"
+          @log.action! "withholds #{@game.format_currency(payout[:corporation])}"
         elsif payout[:per_share].zero?
-          @log << "#{entity.name} does not run"
+          @log.action! 'does not run'
         end
       end
 
@@ -186,8 +186,8 @@ module Engine
 
       private
 
-      def log_payout_shares(entity, revenue, per_share, receivers)
-        @log << "#{entity.name} pays out #{@game.format_currency(revenue)} = "\
+      def log_payout_shares(_entity, revenue, per_share, receivers)
+        @log.action! "pays out #{@game.format_currency(revenue)} = "\
                         "#{@game.format_currency(per_share)} per share (#{receivers})"
       end
     end

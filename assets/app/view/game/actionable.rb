@@ -146,7 +146,7 @@ module View
         store(:selected_action_id, nil, skip: true)
       end
 
-      def history_link(text, title, action_id = nil, style_extra = {}, as_button = false, hotkey = nil)
+      def history_link(text, title, action_id = nil, hotkey = nil)
         route = Lib::Params.add(@app_route, 'action', action_id)
 
         click = lambda do
@@ -164,11 +164,9 @@ module View
           style: {
             margin: '0',
             textDecoration: 'none',
-            **style_extra,
           },
           class: "#hist_#{hotkey}",
         }
-        props[:class] += '.button_link' if as_button
 
         h(Link, props)
       end
