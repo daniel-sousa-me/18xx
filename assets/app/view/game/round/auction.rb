@@ -109,6 +109,7 @@ module View
               h(:div, { style: { display: 'table' } }, tier.map { |company| render_company(company) })
             end
           else
+            companies = companies.partition { |c| c == @step.auctioning }.flatten(1)
             companies.map { |company| render_company(company) }
           end
         end
