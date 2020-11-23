@@ -481,7 +481,7 @@ module Engine
       end
 
       def float_str(_entity)
-        '2 shares to start'
+        "Start as #{phase.corporation_sizes.join('/')} shares"
       end
 
       def available_loans(entity, extra_loans)

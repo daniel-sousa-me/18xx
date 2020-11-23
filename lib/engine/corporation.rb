@@ -24,7 +24,7 @@ module Engine
 
     attr_accessor :ipoed, :par_via_exchange, :max_ownership_percent, :float_percent, :capitalization, :max_share_price
     attr_reader :companies, :min_price, :name, :full_name, :fraction_shares, :type, :id, :needs_token_to_par,
-                :presidents_share
+                :presidents_share, :always_market_price
     attr_writer :par_price, :share_price
 
     SHARES = ([20] + Array.new(8, 10)).freeze
@@ -73,6 +73,7 @@ module Engine
       # corporation with higher share price, farthest on the right, and first position on the share price goes first
       return 1 unless (sp = share_price)
       return -1 unless (ops = other.share_price)
+      return -1 if other.minor?
 
       [ops.price, ops.coordinates.last, -ops.coordinates.first, -ops.corporations.find_index(other)] <=>
       [sp.price, sp.coordinates.last, -sp.coordinates.first, -sp.corporations.find_index(self)]
@@ -114,6 +115,10 @@ module Engine
 
     def num_ipo_reserved_shares
       reserved_shares.sum(&:percent) / share_percent
+    end
+
+    def num_ipo_non_reserved_shares
+      num_ipo_shares - num_ipo_reserved_shares
     end
 
     def num_player_shares
