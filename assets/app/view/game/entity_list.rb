@@ -23,6 +23,7 @@ module View
               float: 'left',
               listStyle: 'none',
               paddingRight: '1rem',
+              display: 'flex',
             },
           }
 
@@ -54,19 +55,26 @@ module View
           children = []
           if entity.corporation? || entity.minor?
             size = TOKEN_SIZES[@game.corporation_size(entity)]
+            vpadding = (TOKEN_SIZES[:large] - size) / 2
             logo_props = {
               attrs: { src: @user&.dig('settings', 'simple_logos') ? entity.simple_logo : entity.logo },
               style: {
-                padding: "#{TOKEN_SIZES[:large] - size}rem 0.4rem 0 0",
+                padding: "#{vpadding}rem 0.4rem #{vpadding}rem 0",
                 height: "#{size}rem",
+                margin: 'auto',
               },
             }
             children << h(:img, logo_props)
           end
 
-          owner = " (#{entity.owner.name.truncate})" if !entity.player? && entity.owner
-          owner = ' (CLOSED)' if entity.closed?
-          children << h(:span, "#{entity.name}#{owner}")
+          text_props = { style: { margin: 'auto' } }
+          small_props = { style: { fontSize: 'smaller' } }
+          owner = entity.owner.name.truncate if !entity.player? && entity.owner
+          owner = 'CLOSED' if entity.closed?
+
+          text = [h(:div, entity.name)]
+          text << h(:div, small_props, owner) if owner
+          children << h(:span, text_props, text)
 
           h(:li, entity_props, children)
         end
