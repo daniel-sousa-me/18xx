@@ -1121,9 +1121,9 @@ module Engine
         end
 
         def available_shorts(corporation)
-          return [0, 0] if corporation&.total_shares == 2
+          return 0 if corporation&.total_shares == 2
 
-          [shorts(corporation).size, corporation.total_shares]
+          corporation.total_shares - shorts(corporation).size
         end
 
         def shorts(corporation)
