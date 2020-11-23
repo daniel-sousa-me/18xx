@@ -2088,7 +2088,7 @@ module Engine
 
       def corporation_size(_entity)
         # For display purposes is a corporation small, medium or large
-        :small
+        :large
       end
 
       def status_str(_corporation); end
