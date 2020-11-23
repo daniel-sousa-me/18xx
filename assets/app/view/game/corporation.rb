@@ -56,7 +56,7 @@ module View
           card_style[:border] = '1px dashed'
         end
 
-        card_style[:border] = '4px solid' if @game.round.can_act?(@corporation)
+        card_style[:border] = '4px solid' if [@corporation, @corporation.owner].any?(@game.round.current_entity)
 
         if selected?
           card_style[:backgroundColor] = 'lightblue'
@@ -92,6 +92,9 @@ module View
         end
         if @corporation.corporation? && @corporation.respond_to?(:escrow) && @corporation.escrow
           extras << render_escrow_account
+        end
+        if @game.respond_to?(:available_shorts) && @game.available_shorts(@corporation)[0].positive?
+          extras << render_shorts
         end
         if extras.any?
           props = { style: { borderCollapse: 'collapse' } }
@@ -349,11 +352,14 @@ module View
         .map do |entity, president, num_shares, did_sell, last_acted_upon, at_limit, double_cert|
           flags = (president ? '*' : '') + (double_cert ? 'd' : '') + (at_limit ? 'L' : '')
 
+          line_props = {}
+          line_props[:style] = { fontWeight: 'bold' } if player == @game.round.current_entity
+
           type = entity.player? ? 'tr.player' : 'tr.corp'
           type += '.bold' if last_acted_upon
           name = entity.player? ? entity.name : "© #{entity.name}"
 
-          h(type, [
+          h(type, line_props, [
             h("td.left.name.nowrap.#{president ? 'president' : ''}", name),
             h('td.right', shares_props, "#{flags.empty? ? '' : flags + ' '}#{share_number_str(num_shares)}"),
             did_sell ? h('td.italic', 'Sold') : '',
@@ -372,7 +378,7 @@ module View
 
         other_corp_rows = entities_rows(@game.corporations.reject { |c| c == @corporation })
 
-        num_ipo_shares = share_number_str(@corporation.num_ipo_shares - @corporation.num_ipo_reserved_shares)
+        num_ipo_shares = share_number_str(@corporation.num_ipo_non_reserved_shares)
         if !num_ipo_shares.empty? && @corporation.capitalization != @game.class::CAPITALIZATION
           num_ipo_shares = '* ' + num_ipo_shares
         end
@@ -567,6 +573,20 @@ module View
         h('tr.ipo', [
           h('td.right', 'Buying Power'),
           h('td.padded_number', @game.format_currency(@game.buying_power(@corporation, full: true)).to_s),
+        ])
+      end
+
+      def render_corporation_size
+        h('tr.ipo', [
+          h('td.right', 'Corporation Size'),
+          h('td.padded_number', @corporation.total_shares),
+        ])
+      end
+
+      def render_shorts
+        h('tr.shorts', [
+          h('td.right', 'Available shorts'),
+          h('td.padded_number', @game.available_shorts(@corporation)[0]),
         ])
       end
 
