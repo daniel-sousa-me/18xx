@@ -35,7 +35,7 @@ module View
         if event['key'] == 'Enter'
           message = event['target']['value']
           if message.strip != ''
-            add_line(user: @user, created_at: Time.now.to_i, message: message)
+            add_line(user: @user, created_at: Time.now, message: message)
             event['target']['value'] = ''
             @connection.post('/chat', message: message)
           end

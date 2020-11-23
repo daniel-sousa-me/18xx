@@ -24,7 +24,7 @@ module Engine
               lay_tile(action, extra_cost: tile_lay[:cost] - 15, entity: owner, spender: owner)
               @round.laid_hexes << action.hex
               tile.hex.assign!('mine')
-              @game.log << "#{owner.name} adds mine to #{tile.hex.name}"
+              @game.log.action! "adds mine to #{tile.hex.name}"
               ability = abilities(action.entity)
               ability.use!
               action.entity.close! if ability.count.zero?

@@ -109,6 +109,7 @@ module View
             end
           else
             companies = @step.available.select(&:company?)
+            companies = companies.partition { |c| c == @step.auctioning }.flatten(1)
             companies.map { |company| render_company(company) }
           end
         end

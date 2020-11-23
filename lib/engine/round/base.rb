@@ -150,6 +150,10 @@ module Engine
         @entity_index = (@entity_index + 1) % @entities.size
       end
 
+      def acted?(entity)
+        @entities.take(@entity_index + 1).any?(entity)
+      end
+
       def reset_entity_index!
         # If overriding, make sure to call @game.next_turn!
         @game.next_turn!

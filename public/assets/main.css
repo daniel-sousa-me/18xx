@@ -8,7 +8,7 @@
 
 a {
   color: currentColor;
-  text-underline-offset: 0.2em;
+  text-decoration: none;
 }
 
 button, .button_link {
@@ -58,7 +58,6 @@ h4 {
 /* prevent hover effects on mobile devices */
 @media(hover: hover) and (pointer: fine) {
   a:hover {
-    text-decoration: underline dotted;
     opacity: 0.8;
   }
   a:active {
@@ -116,8 +115,11 @@ p:last-child {
 }
 
 th, td {
-  padding: 0 0.3rem;
-  vertical-align: top;
+  padding: 0rem 0.3rem;
+}
+
+table.comfortable th, table.comfortable td {
+  padding: 0.1rem 0.5rem;
 }
 
 svg {
@@ -130,11 +132,13 @@ svg {
   background-color: gainsboro;
   color: black;
 }
-#spreadsheet > div:not(#extra_cards) tbody > tr:nth-child(2n) {
+
+#spreadsheet tbody > tr:nth-child(2n) {
   background-image: linear-gradient(rgba(255,255,255,0.4),rgba(255,255,255,0.4));
 }
-#spreadsheet > div:not(#extra_cards) tbody > tr:hover {
-  filter: drop-shadow(1px 0px 2px #555);
+
+#spreadsheet tbody > tr:hover {
+  background-image: linear-gradient(rgba(155,155,155,0.4),rgba(155,155,155,0.4));
 }
 
 @media (prefers-color-scheme: dark) {
@@ -394,8 +398,7 @@ table.center {
 }
 
 div.game.card em {
-  font-style: normal;
-  text-decoration: underline;
+  font-weight: bold;
 }
 
 div#game:focus {

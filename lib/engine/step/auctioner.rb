@@ -43,7 +43,7 @@ module Engine
       end
 
       def pass_auction(entity)
-        @log << "#{entity.name} passes on #{auctioning.name}"
+        @log.action! "passes on #{auctioning.name}"
         remove_from_auction(entity)
       end
 

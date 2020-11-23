@@ -45,7 +45,7 @@ module Engine
             before = corporation.total_shares
             @game.convert(corporation)
             after = corporation.total_shares
-            @log << "#{corporation.name} converts from #{before} to #{after} shares"
+            @log.action! "converts from #{before} to #{after} shares"
 
             tokens = corporation.tokens.size
 
@@ -112,7 +112,7 @@ module Engine
             price = share_price.price
             @game.stock_market.move(corporation, *share_price.coordinates)
 
-            @log << "#{corporation.name} merges with #{target.name} "\
+            @log.action! "merges with #{target.name} "\
               "at share price #{@game.format_currency(price)} receiving #{receiving.join(', ')}"
 
             owner = corporation.owner
