@@ -87,7 +87,7 @@ module Engine
         def process_pass(action)
           player = action.entity
 
-          @log << "#{player.name} passes bidding"
+          @log.action! 'passes bidding'
 
           @bids.delete(player)
 
@@ -107,7 +107,7 @@ module Engine
 
             @game.game_error("Must bid at least #{min_player_bid}") if price < min_player_bid
 
-            @log << "#{player.name} bids #{@game.format_currency(price)}"
+            @log.action! "bids #{@game.format_currency(price)}"
 
             @bids[player] = price
             resolve_auction
@@ -244,7 +244,7 @@ module Engine
 
           share_str = "a #{bundle.percent}% share of #{corporation.name}"
 
-          @log << "#{entity.name} buys #{share_str} "\
+          @log.action! "buys #{share_str} "\
             "from the #{@game.ipo_name(corporation)} "\
             "for #{@game.format_currency(discounted_price)}"
 
