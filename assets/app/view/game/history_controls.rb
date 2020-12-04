@@ -13,38 +13,46 @@ module View
       needs :round_history, default: nil, store: true
 
       def render
-        return h(:div) if @num_actions.zero?
-
-        divs = [h('b.margined', 'History')]
+        divs = []
         cursor = Lib::Params['action']&.to_i
 
-        unless cursor&.zero?
-          divs << link('|<', 'Start', 0)
-
-          last_round =
+        if cursor&.positive?
+          previous_round =
             if cursor == @game.actions.size
               @game.round_history[-2]
             else
               @game.round_history[-1]
             end
-          divs << link('<<', 'Previous Round', last_round) if last_round
-
-          divs << link('<', 'Previous Action', cursor ? cursor - 1 : @num_actions - 1)
         end
+
+        divs << link('|<', 'Start', 0, !cursor&.positive?)
+        divs << link('<<', 'Previous Round', previous_round, !previous_round)
+        divs << link('<', 'Previous Action', cursor ? cursor - 1 : @num_actions - 1, !cursor&.positive?)
+
+        divs << link_container('')
 
         if cursor
-          divs << link('>', 'Next Action', cursor + 1 < @num_actions ? cursor + 1 : nil)
           store(:round_history, @game.round_history, skip: true) unless @round_history
           next_round = @round_history[@game.round_history.size]
-          divs << link('>>', 'Next Round', next_round) if next_round
-          divs << link('>|', 'Current', nil)
         end
 
-        h(:div, divs)
+        divs << link('>', 'Next Action', cursor && cursor + 1 < @num_actions ? cursor + 1 : nil, !cursor)
+        divs << link('>>', 'Next Round', next_round, !next_round)
+        divs << link('>|', 'Current', nil, !cursor)
+
+        h(:div, { style: { margin: '0.5rem', textAlign: 'center' } }, divs)
       end
 
-      def link(text, title, action_id)
-        h(:span, { style: { marginRight: '2rem' } }, [history_link(text, title, action_id)])
+      def link_container(content, disabled)
+        props = { style: { margin: '0 1rem' } }
+        props[:style][:opacity] = 0.4 if disabled
+
+        h(:span, props, content)
+      end
+
+      def link(text, title, action_id, disabled=false)
+        content = disabled ? text : [history_link(text, title, action_id)]
+        link_container(content, disabled)
       end
     end
   end
