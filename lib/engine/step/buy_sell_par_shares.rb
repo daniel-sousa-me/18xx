@@ -111,6 +111,7 @@ module Engine
 
         timing &&
           !(@game.class::MUST_SELL_IN_BLOCKS && @round.players_sold[entity][corporation] == :now) &&
+          corporation.holding_ok?(entity, -bundle.percent) &&
           can_sell_order? &&
           @game.share_pool.fit_in_bank?(bundle) &&
           bundle.can_dump?(entity)

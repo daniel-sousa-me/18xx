@@ -30,7 +30,6 @@ module View
           @selected_corporation ||= @auctioning_corporation
 
           @price_protection = @step.price_protection if @step.respond_to?(:price_protection)
-          @selected_corporation ||= @price_protection&.corporation
 
           @current_entity = @step.current_entity
           if @last_player != @current_entity && !@auctioning_corporation
@@ -55,6 +54,7 @@ module View
             children << h('div.margined',
                           "You can price protect #{num_presentation} of #{@price_protection.corporation.name} "\
                           "for #{@game.format_currency(@price_protection.price)}")
+            @selected_corporation = @price_protection.corporation if @price_protection
           end
 
           children.concat(render_buttons)
