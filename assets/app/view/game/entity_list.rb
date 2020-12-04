@@ -39,13 +39,14 @@ module View
 
           style = entity_props[:style]
 
+          border = "#{setting_for(:font)} solid thin"
           if @acting_entity == entity
             style[:fontWeight] = 'bold'
-            style[:border] = "#{setting_for(:font)} solid thin"
+            style[:borderTop] = style[:borderBottom] = border
           end
 
-          style[:borderLeft] = "#{setting_for(:font)} solid thin" if index.positive?
-          style[:borderRight] = "#{setting_for(:font)} solid thin" if index < @entities.size - 1
+          style[:borderLeft] = border if index.positive? || @acting_entity == entity
+          style[:borderRight] = border if index < @entities.size - 1 || @acting_entity == entity
 
           children = []
           if entity.corporation?
