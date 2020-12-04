@@ -66,8 +66,8 @@ module Engine
           @round.goto_entity!(player)
 
           num_presentation = @game.share_pool.num_presentation(bundle)
-          @log << "#{player.name} price protects #{num_presentation} "\
-                  "of #{bundle.corporation.name} for #{@game.format_currency(price)}"
+          @log.action! "price protects #{num_presentation} "\
+                       "of #{bundle.corporation.name} for #{@game.format_currency(price)}"
         end
 
         def skip!(action)
