@@ -69,18 +69,19 @@ module Engine
         optional_rules ||= data.settings['optional_rules'] || []
       end
 
+      unprocessed_actions = (at_action ? actions.drop(at_action) : [])
       actions = actions.take(at_action) if at_action
 
-      Engine.game_by_title(title).new(
-        names, id: id, actions: actions, pin: pin, optional_rules: optional_rules, user: user, **kwargs
-      )
+      Engine.game_by_title(title).new(names,
+                                      id: id, actions: actions, unprocessed_actions: unprocessed_actions,
+                                      pin: pin, optional_rules: optional_rules, user: user, **kwargs)
     end
 
     class Base
       include Game::Meta
 
-      attr_reader :raw_actions, :current_action, :actions, :bank, :cert_limit, :cities, :companies, :corporations,
-                  :depot, :finished, :graph, :hexes, :id, :loading, :loans, :log, :minors,
+      attr_reader :raw_actions, :current_action, :actions, :unprocessed_actions, :bank, :cert_limit, :cities,
+                  :companies, :corporations, :depot, :finished, :graph, :hexes, :id, :loading, :loans, :log, :minors,
                   :phase, :players, :operating_rounds, :round, :share_pool, :stock_market, :tile_groups,
                   :tiles, :turn, :total_loans, :undo_possible, :redo_possible, :round_history, :all_tiles,
                   :optional_rules, :exception, :last_processed_action, :broken_action,
@@ -329,7 +330,7 @@ module Engine
         end
       end
 
-      def initialize(names, id: 0, actions: [], pin: nil, strict: false, optional_rules: [], user: nil)
+      def initialize(names, id: 0, actions: [], unprocessed_actions: [], pin: nil, strict: false, optional_rules: [], user: nil)
         @id = id
         @turn = 1
         @final_turn = nil
@@ -339,6 +340,7 @@ module Engine
         @log = Engine::GameLog.new(self)
         @queued_log = []
         @actions = []
+        @unprocessed_actions = unprocessed_actions
         @raw_actions = []
         @turn_start_action_id = 0
         @last_turn_start_action_id = 0
@@ -534,6 +536,17 @@ module Engine
         end
         @redo_possible = active_undos.any?
         @loading = false
+      end
+
+      def process_static_undo(action)
+        @raw_actions.concat(@unprocessed_actions.map(&:to_h))
+        @actions.concat(@unprocessed_actions)
+        action.id = current_action_id + 1
+        @raw_actions << action.to_h
+        @actions << action
+        @last_game_action_id = action.id
+
+        self
       end
 
       def process_action(action, add_auto_actions: false)
