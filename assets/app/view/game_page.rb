@@ -298,14 +298,14 @@ module View
       }
 
       menu_items = [
-        item('G|ame', ''),
-        item('E|ntities', '#entities'),
-        item('M|ap', '#map'),
-        item('Mark|et', '#market'),
-        item('I|nfo', '#info'),
-        item('T|iles', '#tiles'),
-        item('S|preadsheet', '#spreadsheet'),
-        item('To|ols', '#tools'),
+        item('Game', ''),
+        item('Entities', '#entities'),
+        item('Map', '#map'),
+        item('Market', '#market'),
+        item('Info', '#info'),
+        item('Tiles', '#tiles'),
+        item('Spreadsheet', '#spreadsheet'),
+        item('Tools', '#tools'),
       ]
 
       enabled = @game.programmed_actions[@game.player_by_id(@user['id'])] if @user
@@ -317,22 +317,12 @@ module View
     end
 
     def item(name, anchor)
-      name = name.split(/(\|)/).each_slice(2).flat_map do |text, pipe|
-        if pipe
-          head = text[0..-2]
-          tail = text[-1]
-          [h(:span, head), h(:span, { style: { textDecoration: 'underline' } }, tail)]
-        else
-          h(:span, text)
-        end
-      end
-
       a_props = {
         attrs: {
           href: anchor,
           onclick: 'return false',
         },
-        style: { textDecoration: route_anchor == anchor[1..-1] ? 'underline' : 'none' },
+        style: { fontWeight: route_anchor == anchor[1..-1] ? 'bold' : 'normal' },
         on: { click: ->(_event) { change_anchor(anchor) } },
       }
       li_props = {
