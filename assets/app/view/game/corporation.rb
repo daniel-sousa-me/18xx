@@ -38,7 +38,7 @@ module View
         card_style = {
           cursor: 'pointer',
         }
-        card_style[:border] = '4px solid' if @game.round.current_entity == @corporation
+        card_style[:border] = '4px solid' if [@corporation, @corporation.owner].any?(@game.round.current_entity)
         card_style[:display] = @display
 
         if selected?
@@ -318,7 +318,9 @@ module View
           .sort_by { |_, president, num_shares, _| [president ? 0 : 1, -num_shares] }
           .map do |player, president, num_shares, did_sell, at_limit|
             flags = (president ? '*' : '') + (at_limit ? 'L' : '')
-            h('tr.player', [
+            line_props = {}
+            line_props[:style] = { fontWeight: 'bold' } if player == @game.round.current_entity
+            h('tr.player', line_props, [
               h("td.left.name.nowrap.#{president ? 'president' : ''}", player.name),
               h('td.right', shares_props, "#{flags.empty? ? '' : flags + ' '}#{share_number_str(num_shares)}"),
               did_sell ? h('td.italic', 'Sold') : '',

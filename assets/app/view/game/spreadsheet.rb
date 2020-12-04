@@ -142,7 +142,7 @@ module View
 
         or_history_titles = render_history_titles(@game.all_corporations)
 
-        pd_props = {
+        highlight_props = {
           style: {
             background: 'salmon',
             color: 'black',
@@ -168,8 +168,14 @@ module View
         bottom = [h(:th, { style: { paddingBottom: '0.3rem' } }, render_sort_link('SYM', :id))]
 
         @players.each do |p|
+          if @game.round.is_a?(Engine::Round::Stock)
+            highlight = @game.round.current_entity == p
+          else
+            highlight = p == @game.priority_deal_player
+          end
+
           bottom << h('th.name.nowrap.right',
-                      p == @game.priority_deal_player ? pd_props : '', render_sort_link(p.name, p.id))
+                      highlight ? highlight_props : {}, render_sort_link(p.name, p.id))
         end
 
         bottom << h(:th, @game.ipo_name)
