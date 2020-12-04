@@ -59,9 +59,15 @@ module View
           return store(:flash_opts, msg)
         end
 
+        static_undo = false
         if Lib::Params['action']
-          return store(:flash_opts, 'You cannot make changes while browsing history.
-            Press >| to navigate to the current game action.')
+          if action.is_a?(Engine::Action::Undo) && action.action_id.to_s == Lib::Params['action'].to_s
+            @game_data[:actions] = @game_data[:actions] + @game.unprocessed_actions.map(&:to_h)
+            static_undo = true
+          else
+            return store(:flash_opts, 'You cannot make changes while browsing history.
+              Press >| to navigate to the current game action.')
+          end
         end
 
         if !hotseat &&
@@ -86,7 +92,11 @@ module View
           end
         end
 
-        game = @game.process_action(action, add_auto_actions: true).maybe_raise!
+        game = if static_undo
+                 @game.process_static_undo(action)
+               else
+                 @game.process_action(action, add_auto_actions: true).maybe_raise!
+               end
 
         @game_data[:actions] << action.to_h
         store(:game_data, @game_data, skip: true)
