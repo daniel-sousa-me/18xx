@@ -222,7 +222,7 @@ module View
           href: anchor,
           onclick: 'return false',
         },
-        style: { textDecoration: route_anchor == anchor[1..-1] ? 'underline' : 'none' },
+        style: { fontWeight: route_anchor == anchor[1..-1] ? 'bold' : 'normal' },
         on: { click: change_anchor },
       }
       li_props = {
