@@ -352,7 +352,7 @@ module View
                  when :tokens
                    [@game.count_available_tokens(corporation), corporation.tokens.size]
                  when :companies
-                   [corporation.companies.size, corporation.companies.map { |c| c.value || 0 }.sum]
+                   [corporation.companies.size, corporation.companies.sum { |c| c.value || 0 }]
                  else
                    p = @game.player_by_id(@spreadsheet_sort_by)
                    n = p&.num_shares_of(corporation)

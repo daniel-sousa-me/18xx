@@ -8,26 +8,23 @@ module View
   module Game
     class HistoryControls < Snabberb::Component
       include Actionable
+
       needs :num_actions, default: 0
       needs :game, store: true
       needs :round_history, default: nil, store: true
+      needs :app_route, default: nil, store: true
 
       def render
-        return h(:div) if @num_actions.zero?
-
-        divs = [h(:h3, { style: { margin: '0', justifySelf: 'left' } }, 'History')]
+        divs = []
         cursor = Lib::Params['action']&.to_i
 
         unless cursor&.zero?
-          divs << link('|<', 'Start', 0, 'Home')
-
-          last_round =
+          prev_round =
             if cursor == @game.raw_actions.size
               @game.round_history[-2]
             else
               @game.round_history[-1]
             end
-          divs << link('<<', 'Previous Round', last_round, 'PageUp') if last_round
 
           prev_action =
             if @game.exception
@@ -37,31 +34,108 @@ module View
             else
               @num_actions - 1
             end
-          divs << link('<', 'Previous Action', prev_action, 'ArrowUp')
         end
+
+        divs << link('|<', 'Start', 0, cursor&.zero?, 'Home')
+        divs << link('<<', 'Previous Round', prev_round, !prev_round, 'PageUp')
+        divs << link('<', 'Previous Action', prev_action, cursor&.zero?, 'ArrowUp')
+
+        route = Lib::Params.add(@app_route, 'action')
+
+        divs << link_container(
+          '⟲',
+          [h('a#hist_ctrl+z', {
+               attrs: {
+                 href: route,
+                 onclick: 'return false',
+                 title: 'Undo – shortcut: ctrl+z',
+               },
+               on: {
+                 click: lambda do
+                   process_action(Engine::Action::Undo.new(@game.current_entity,
+                                                           action_id: cursor))
+                   store(:app_route, route, skip: true) if cursor
+                 end,
+               },
+               style: {
+                 color: 'currentColor',
+                 textDecoration: 'none',
+               },
+             }, '⟲')],
+          !@game.undo_possible,
+          true
+        )
+
+        divs << link_container(
+          '⇤',
+          [h(:a, {
+               attrs: {
+                 href: route,
+                 onclick: 'return false',
+                 title: 'Restart Turn',
+               },
+               on: {
+                 click: lambda do
+                   action_id = if @game.turn_start_action_id != @game.last_game_action_id
+                                 @game.turn_start_action_id
+                               else
+                                 @game.last_turn_start_action_id
+                               end
+                   process_action(Engine::Action::Undo.new(@game.current_entity, action_id: action_id))
+                   store(:app_route, route, skip: true) if cursor
+                 end,
+               },
+               style: {
+                 color: 'currentColor',
+                 textDecoration: 'none',
+               },
+             }, '⇤')],
+            !@game.undo_possible || !@game.turn_start_action_id,
+            true
+        )
+
+        divs << link_container(
+          '⟳',
+          [h('a#hist_ctrl+y', {
+               attrs: {
+                 href: '#',
+                 onclick: 'return false',
+                 title: 'Redo – shortcut: ctrl+y',
+               },
+               on: {
+                 click: -> { process_action(Engine::Action::Redo.new(@game.current_entity)) },
+               },
+               style: {
+                 color: 'currentColor',
+                 textDecoration: 'none',
+               },
+             }, '⟳')],
+          !@game.redo_possible,
+          true
+        )
 
         if cursor && !@game.exception
-          divs << link('>', 'Next Action', cursor + 1 < @num_actions ? cursor + 1 : nil, 'ArrowDown')
           store(:round_history, @game.round_history, skip: true) unless @round_history
           next_round = @round_history[@game.round_history.size]
-          divs << link('>>', 'Next Round', next_round, 'PageDown') if next_round
-          divs << link('>|', 'Current', nil, 'End')
         end
 
-        props = {
-          style: {
-            display: 'grid',
-            grid: '1fr / 4.2rem repeat(6, minmax(2rem, 2.5rem))',
-            justifyItems: 'center',
-            gap: '0 0.5rem',
-          },
-        }
+        divs << link('>', 'Next Action', cursor && cursor + 1 < @num_actions ? cursor + 1 : nil, !cursor, 'ArrowDown')
+        divs << link('>>', 'Next Round', next_round, !next_round, 'PageDown')
+        divs << link('>|', 'Current', nil, !cursor, 'End')
 
-        h(:div, props, divs)
+        h(:div, { style: { margin: '0.5rem', textAlign: 'center', display: 'flex' } }, divs)
       end
 
-      def link(text, title, action_id)
-        h(:span, { style: { marginRight: '2rem' } }, [history_link(text, title, action_id)])
+      def link_container(text, elm, disabled = false, bigger = false)
+        props = { style: { margin: 'auto 1rem' } }
+        props[:style][:opacity] = 0.4 if disabled
+        props[:style][:fontSize] = '1.4em' if bigger
+
+        h(:span, props, disabled ? text : elm)
+      end
+
+      def link(text, title, action_id, disabled, hotkey)
+        link_container(text, [history_link(text, title, action_id, hotkey)], disabled)
       end
     end
   end
