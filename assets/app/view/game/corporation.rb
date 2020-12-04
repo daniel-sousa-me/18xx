@@ -349,7 +349,7 @@ module View
             ])
           end
 
-        num_ipo_shares = share_number_str(@corporation.num_ipo_shares - @corporation.num_ipo_reserved_shares)
+        num_ipo_shares = share_number_str(@corporation.num_ipo_non_reserved_shares)
         unless num_ipo_shares.empty? || @corporation.capitalization == @game.class::CAPITALIZATION
           num_ipo_shares = '* ' + num_ipo_shares
         end

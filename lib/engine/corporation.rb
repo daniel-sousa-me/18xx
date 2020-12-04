@@ -121,6 +121,10 @@ module Engine
       reserved_shares.sum(&:percent) / share_percent
     end
 
+    def num_ipo_non_reserved_shares
+      num_ipo_shares - num_ipo_reserved_shares
+    end
+
     def num_player_shares
       player_share_holders.values.sum / share_percent
     end

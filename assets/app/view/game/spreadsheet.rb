@@ -23,6 +23,7 @@ module View
 
         @players = @game.players.reject(&:bankrupt)
         @hide_ipo = @game.all_corporations.reject(&:minor?).all?(&:always_market_price)
+        @hide_reserved = @game.all_corporations.reject(&:minor?).flat_map(&:shares).all?(&:buyable)
         @show_corporation_size = @game.all_corporations.any? { |c| @game.show_corporation_size?(c) }
 
         children = []
@@ -158,7 +159,7 @@ module View
           h(:tr, [
             h(:th, ''),
             h(:th, th_props[@game.players.size], 'Players'),
-            h(:th, th_props[2, true], 'Bank'),
+            h(:th, th_props[@hide_reserved ? 2 : 3, true], 'Shares'),
             h(:th, th_props[@hide_ipo ? 1 : 2], 'Prices'),
             h(:th, th_props[5 + extra.size, true, false], 'Corporation'),
             h(:th, ''),
@@ -179,12 +180,13 @@ module View
         end
 
         bottom << h(:th, @game.ipo_name)
+        bottom << h(:th, @game.ipo_reserved_name) unless @hide_reserved
         bottom << h(:th, 'Market')
 
         if @hide_ipo
           bottom << h(:th, render_sort_link('Price', :share_price))
         else
-          bottom << h(:th, render_sort_link(@game.ipo_name, :par_price))
+          bottom << h(:th, render_sort_link(@game.ipo_name, :par_price)) unless @hide_ipo
           bottom << h(:th, render_sort_link('Market', :share_price))
         end
 
@@ -328,7 +330,9 @@ module View
         end
 
         children << h('td.padded_number', { style: { borderLeft: border_style } },
-                      num_shares_of(corporation, corporation).to_s)
+                      corporation.num_ipo_non_reserved_shares.to_s)
+        children << h('td.padded_number',
+                      corporation.num_ipo_reserved_shares.to_s) unless @hide_reserved
         children << h('td.padded_number', { style: { borderRight: border_style } },
                       "#{corporation.receivership? ? '*' : ''}#{num_shares_of(@game.share_pool, corporation)}")
 
