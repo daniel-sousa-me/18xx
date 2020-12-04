@@ -13,15 +13,11 @@ module View
       needs :num_actions, default: 0
 
       def render
-        h('div#history_undo', { style: { overflow: :auto } }, [history, undo])
+        h('div#history_undo', { style: { overflow: :auto } }, [history])
       end
 
       def history
         h('div#history', { style: { marginBottom: '0.5rem' } }, [h(HistoryControls, num_actions: @num_actions)])
-      end
-
-      def undo
-        h('div#undo_redo', [h(UndoButton), h(RestartTurnButton), h(RedoButton)])
       end
     end
   end

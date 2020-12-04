@@ -99,7 +99,8 @@ module View
           end
         end
 
-        if line.is_a?(String)
+        case line
+        when String
           if line.start_with?('--')
             line_props[:style][:fontWeight] = 'bold'
             line_props[:style][:marginTop] = '0.4em'
@@ -109,7 +110,7 @@ module View
           end
 
           children << h(:div, line_props, line)
-        elsif line.is_a?(Hash)
+        when Hash
           require 'view/log_line'
           children << if line[:type]
                         h('div.logline', line_props, [h(LogLine, line: line)])
