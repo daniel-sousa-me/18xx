@@ -20,9 +20,8 @@ module View
           entity_props = {
             key: "entity_#{index}",
             style: {
-              float: 'left',
               listStyle: 'none',
-              paddingRight: '1rem',
+              padding: '0.5rem 1rem',
               display: 'flex',
             },
           }
@@ -41,16 +40,14 @@ module View
 
           style = entity_props[:style]
 
-          if @acting_entity == entity || @round.can_act?(entity)
-            style[:textDecoration] = 'underline'
-            style[:fontSize] = '1.1rem'
+          border = "#{setting_for(:font)} solid thin"
+          if @acting_entity == entity
             style[:fontWeight] = 'bold'
+            style[:borderTop] = style[:borderBottom] = border
           end
 
-          if index.positive?
-            style[:borderLeft] = "#{setting_for(:font)} solid thin"
-            style[:paddingLeft] = '1rem'
-          end
+          style[:borderLeft] = border if index.positive? || @acting_entity == entity
+          style[:borderRight] = border if index < @entities.size - 1 || @acting_entity == entity
 
           children = []
           if entity.corporation? || entity.minor?
@@ -91,6 +88,7 @@ module View
         ul_props = {
           key: 'entity_order_container',
           style: {
+            display: 'flex',
             width: 'max-content',
             margin: '0',
             padding: '0',
