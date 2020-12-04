@@ -27,7 +27,6 @@ module View
         @show_corporation_size = @game.all_corporations.any? { |c| @game.show_corporation_size?(c) }
 
         children = []
-        children << h(Bank, game: @game)
         children << render_table
 
         h('div#spreadsheet', { style: {
@@ -111,7 +110,6 @@ module View
                            end,
                   textDecorationLine: hist[x].dividend.kind == 'half' ? 'underline' : '',
                   textDecorationStyle: hist[x].dividend.kind == 'half' ? 'dotted' : '',
-                  padding: '0 0.15rem',
                 },
               }
 
@@ -169,11 +167,11 @@ module View
         bottom = [h(:th, { style: { paddingBottom: '0.3rem' } }, render_sort_link('SYM', :id))]
 
         @players.each do |p|
-          if @game.round.is_a?(Engine::Round::Stock)
-            highlight = @game.round.current_entity == p
-          else
-            highlight = p == @game.priority_deal_player
-          end
+          highlight = if @game.round.is_a?(Engine::Round::Stock)
+                        @game.round.current_entity == p
+                      else
+                        p == @game.priority_deal_player
+                      end
 
           bottom << h('th.name.nowrap.right',
                       highlight ? highlight_props : {}, render_sort_link(p.name, p.id))
@@ -376,6 +374,9 @@ module View
         h(:tr, zebra_props, [
           h('th.left', 'Cash'),
           *@game.players.map { |p| h('td.padded_number', @game.format_currency(p.cash)) },
+          h(:td, { style: { backgroundColor: color_for(:bg) } }, ''),
+          h(:td, { style: { backgroundColor: color_for(:bg), color: color_for(:font) } },
+            [h(:div, { style: { position: 'absolute' } }, [h(Bank, game: @game)])]),
         ])
       end
 
