@@ -237,17 +237,16 @@ module Engine
       end
 
       def check_other(route)
-        return unless destination = @round.connection_runs[route.corporation]
+        return unless (destination = @round.connection_runs[route.corporation])
 
         home = home_hex(route.corporation)
         connection = route.routes.any? do |r|
           next if r.visited_stops.size < 2
+
           (r.visited_stops.values_at(0, -1).map(&:hex) - [home, destination]).none?
         end
 
-        unless connection
-          game_error('At least one train has to run from the home station to the destination')
-        end
+        game_error('At least one train has to run from the home station to the destination') unless connection
       end
     end
   end

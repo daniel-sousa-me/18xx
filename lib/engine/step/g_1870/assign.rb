@@ -24,10 +24,10 @@ module Engine
             hex.assign!('GSC closed', entity.owner)
             entity.close!
 
-            @log << "The port is closed"
+            @log << 'The port is closed'
           else
             super
-            @log << "The port is open. To close the port use the ability again" if entity == @game.port_company
+            @log << 'The port is open. To close the port use the ability again' if entity == @game.port_company
           end
         end
       end

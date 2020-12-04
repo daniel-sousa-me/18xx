@@ -6,7 +6,7 @@ module Engine
   module Step
     module G1870
       class ReturnConnectionToken < Token
-        def actions(entity)
+        def actions(_entity)
           ['choose']
         end
 
@@ -40,19 +40,23 @@ module Engine
 
         def choices
           options = ['Charter']
-          options << 'Map' unless @round.connection_runs[current_entity].tile.cities.any? { |c| c.tokened_by?(current_entity) }
+          unless @round.connection_runs[current_entity].tile.cities.any? { |c| c.tokened_by?(current_entity) }
+            options << 'Map'
+          end
 
           options
         end
 
         def process_choose(action)
+          entity = action.entity
+
           token = Engine::Token.new(action.entity, price: 100)
-          action.entity.tokens << token
+          entity.tokens << token
 
           if action.choice == 'Map'
-            @round.connection_runs[action.entity].tile.cities.first.place_token(action.entity, token, free: true, outside: true)
+            @round.connection_runs[entity].tile.cities.first.place_token(entity, token, free: true, outside: true)
           else
-            action.entity.remove_ability(action.entity.abilities(:assign_hexes).first)
+            entity.remove_ability(entity.abilities(:assign_hexes).first)
           end
 
           @round.connection_steps << self

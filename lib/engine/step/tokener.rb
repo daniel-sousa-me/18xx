@@ -37,11 +37,7 @@ module Engine
         @game.game_error('Token is already used') if token.used
 
         token, ability = adjust_token_price_ability!(entity, token, hex, city, special_ability)
-        tokener = entity.name
-        if ability
-          tokener = "#{entity.name} (#{ability.owner.sym})" if ability.owner != entity
-          entity.remove_ability(ability)
-        end
+        entity.remove_ability(ability) if ability
 
         free = !token.price.positive?
         city.place_token(entity, token, free: free, cheater: special_ability&.cheater)

@@ -39,47 +39,50 @@ module Engine
         def check_connection_runs
           @connection_runs = {}
           corporations = @game.corporations.dup.sort
-          corporations.unshift(corporations.delete(current_entity)) if current_entity && corporations.any?(current_entity)
+          if current_entity && corporations.any?(current_entity)
+            corporations.unshift(corporations.delete(current_entity))
+          end
 
           corporations.each do |corporation|
-            next unless bound = corporation.trains.map(&:distance).max
-            next unless destination = @game.destination_hex(corporation)
+            next unless (bound = corporation.trains.map(&:distance).max)
+            next unless (destination = @game.destination_hex(corporation))
             next unless destination.assigned?(corporation)
 
             home = @game.home_hex(corporation)
 
             distance = lambda do |hex|
-              (home.x - hex.x) ** 2 / 4 + (home.y - hex.y) ** 2
+              (home.x - hex.x)**2 / 4 + (home.y - hex.y)**2
             end
 
-            if check_connection_run(corporation, distance, bound, home, {destination => 1}, [])
-              corporation.trains.each { |train| train.operated = false }
+            next unless check_connection_run(corporation, distance, bound, home, { destination => 1 }, [])
 
-              @connection_runs[corporation] = destination
-              destination.remove_assignment!(corporation)
+            corporation.trains.each { |train| train.operated = false }
 
-              @game.log << "-- #{corporation.name} can connect to its destination --"
-            end
+            @connection_runs[corporation] = destination
+            destination.remove_assignment!(corporation)
+
+            @game.log << "-- #{corporation.name} can connect to its destination --"
           end
         end
 
         def check_connection_run(corporation, distance, bound, home, queue, visited)
-          return false unless current = queue.keys.min_by(&distance)
+          return false unless (current = queue.keys.min_by(&distance))
 
-          current.all_connections.each do |c|
-            hex = c.hexes.find { |h| h != current && !(h.tile.city_towns + h.tile.offboards).none? }
+          current.all_connections.each do |connection|
+            hex = connection.hexes.find { |h| h != current && (h.tile.city_towns + h.tile.offboards).any? }
 
             return true if hex == home
 
             next if queue[current] + 1 == bound
             next if visited.include?(hex)
-            next if hex.tile.city_towns.all? { |c| c.blocks?(corporation) }
+            next if hex.tile.city_towns.all? { |ct| ct.blocks?(corporation) }
 
             queue[hex] ||= Float::INFINITY
             queue[hex] = queue[current] + 1 if queue[current] < queue[hex]
           end
 
-          check_connection_run(corporation, distance, bound, home, queue.reject{ |h, _| h == current }, visited.append(current))
+          next_queue = queue.reject { |h, _| h == current }
+          check_connection_run(corporation, distance, bound, home, next_queue, visited.append(current))
         end
       end
     end

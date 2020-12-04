@@ -27,7 +27,7 @@ module View
         end
 
         h(:div, [
-          h("div", { style: { marginTop: '0.5rem' } }, "#{@game.round.active_step.choice_name}:"),
+          h('div', { style: { marginTop: '0.5rem' } }, "#{@game.round.active_step.choice_name}:"),
           *choice_buttons,
         ])
       end

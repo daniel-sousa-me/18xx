@@ -43,7 +43,7 @@ module Engine
           @game.connection_runs[entity] = {
             turn: @game.turn,
             round: @round.round_num,
-            info: OperatingInfo.new(routes, action, revenue)
+            info: OperatingInfo.new(routes, action, revenue),
           }
 
           @round.routes = []
