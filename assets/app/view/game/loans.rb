@@ -13,15 +13,17 @@ module View
         actions = @game.round.actions_for(@corporation)
         children = []
 
-        if actions.include?('take_loan')
-          children << h(:button, {
-                          on: {
-                            click: lambda do
-                                     process_action(Engine::Action::TakeLoan.new(@corporation, loan: @game.loans[0]))
-                                   end,
-                          },
-                        },
-                        'Take Loan',)
+        if actions.include?('take_loan') || actions.include?('payoff_loan')
+          props = {
+            on: {
+              click: lambda do
+                process_action(Engine::Action::TakeLoan.new(@corporation, loan: @game.loans[0]))
+              end,
+            },
+          }
+          props = { style: { backgroundColor: 'gray', pointerEvents: 'none' } } unless actions.include?('take_loan')
+
+          children << h(:button, props, 'Take Loan')
         end
 
         if actions.include?('payoff_loan')
