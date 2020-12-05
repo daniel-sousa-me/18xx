@@ -7,11 +7,15 @@ module Engine
     module G1870
       class ReturnConnectionToken < Token
         def actions(_entity)
-          ['choose']
+          ['choose', 'pass']
         end
 
         def description
           'Return Connection Token'
+        end
+
+        def pass_description
+          'Connection run not possible'
         end
 
         def override_entities
@@ -49,18 +53,27 @@ module Engine
 
         def process_choose(action)
           entity = action.entity
+          destination = @round.connection_runs[entity]
 
           token = Engine::Token.new(action.entity, price: 100)
           entity.tokens << token
 
           if action.choice == 'Map'
-            @round.connection_runs[entity].tile.cities.first.place_token(entity, token, free: true, outside: true)
+            destination.tile.cities.first.place_token(entity, token, free: true, outside: true)
           else
             entity.remove_ability(entity.abilities(:assign_hexes).first)
           end
 
+          destination.remove_assignment!(entity)
+          entity.trains.each { |train| train.operated = false }
+
           @round.connection_steps << self
           pass!
+        end
+
+        def process_pass(action)
+          @round.connection_runs.shift
+          @round.skip_connection_check = true
         end
       end
     end
