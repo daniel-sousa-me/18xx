@@ -82,6 +82,7 @@ module Engine
           Step::DiscardTrain,
           Step::BuyTrain,
           [Step::G1870::BuyCompany, blocks: true],
+          Step::G1870::PriceProtection,
         ], round_num: round_num)
       end
 
@@ -140,6 +141,10 @@ module Engine
         end
       end
 
+      def company_by_id(id)
+        return super('GSC') if id == 'GSCᶜ'
+      end
+
       def river_company
         @river_company ||= company_by_id('MRBC')
       end
@@ -163,7 +168,8 @@ module Engine
       def purchasable_companies(entity = nil)
         entity ||= current_entity
         return super unless @phase.name == '1'
-        return [river_company] if [mp_corporation, ssw_corporation].include?(entity)
+
+        return [river_company] if [mp_corporation, ssw_corporation].include?(entity) && river_company.owner.player?
 
         []
       end
@@ -182,7 +188,7 @@ module Engine
       end
 
       def assignment_tokens(assignment)
-        return "/logos/gray_#{assignment.logo_filename}" if assignment.is_a?(Engine::Corporation)
+        return "/icons/#{assignment.logo_filename}" if assignment.is_a?(Engine::Corporation)
 
         super
       end

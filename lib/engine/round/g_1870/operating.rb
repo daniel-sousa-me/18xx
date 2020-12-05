@@ -7,7 +7,7 @@ module Engine
   module Round
     module G1870
       class Operating < Operating
-        attr_accessor :river_special_tile_lay, :connection_steps
+        attr_accessor :river_special_tile_lay, :connection_steps, :skip_connection_check
         attr_reader :connection_runs
 
         def start_operating
@@ -19,13 +19,16 @@ module Engine
         def setup
           check_connection_runs
           @connection_steps = []
+          @skip_connection_check = false
 
           super
         end
 
         def next_entity!
-          check_connection_runs
+          check_connection_runs unless @skip_connection_check
           return if @connection_runs.any?
+
+          @skip_connection_check = false
 
           super
         end
@@ -52,10 +55,7 @@ module Engine
             home = @game.home_hex(corporation)
             next unless check_connection_run(corporation, bound, home, { destination => 1 }, [])
 
-            corporation.trains.each { |train| train.operated = false }
-
             @connection_runs[corporation] = destination
-            destination.remove_assignment!(corporation)
 
             @game.log << "-- #{corporation.name} can connect to its destination --"
           end

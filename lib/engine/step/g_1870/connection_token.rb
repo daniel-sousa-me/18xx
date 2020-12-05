@@ -14,6 +14,10 @@ module Engine
           'Return Connection Token'
         end
 
+        def pass_description
+          'Connection run not possible'
+        end
+
         def override_entities
           @round.connection_runs.keys
         end
@@ -62,6 +66,9 @@ module Engine
             entity.remove_ability(ability)
             @log << "#{entity.name} puts destination token on the charter for later use, forfeiting the bonus"
           end
+
+          destination.remove_assignment!(entity)
+          entity.trains.each { |train| train.operated = false }
 
           @round.connection_steps << self
           pass!

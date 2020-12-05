@@ -222,6 +222,13 @@ module Engine
       shares
     end
 
+    def num_presentation(bundle)
+      num_shares = bundle.num_shares
+      return "a #{bundle.percent}% share" if num_shares == 1
+
+      "#{num_shares} shares"
+    end
+
     private
 
     def distance(player_a, player_b)
@@ -238,13 +245,6 @@ module Engine
       share.owner.shares_by_corporation[corporation].delete(share)
       to_entity.shares_by_corporation[corporation] << share
       share.owner = to_entity
-    end
-
-    def num_presentation(bundle)
-      num_shares = bundle.num_shares
-      return "a #{bundle.percent}% share" if num_shares == 1
-
-      "#{num_shares} shares"
     end
   end
 end

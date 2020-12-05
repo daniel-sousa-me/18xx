@@ -339,11 +339,22 @@ module Engine
           "special": false,
           "when": "track",
           "hexes": [
+            "A16",
+            "B17",
+            "C18",
+            "D17",
+            "E18",
+            "F19",
+            "G18",
             "H17",
+            "I16",
+            "J15",
+            "K14",
             "L13",
             "M14",
             "N15",
-            "O16"
+            "O16",
+            "O18"
           ],
           "tiles": []
         }
