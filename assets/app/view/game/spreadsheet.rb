@@ -26,7 +26,7 @@ module View
         @hide_reserved = @game.all_corporations.reject(&:minor?).flat_map(&:shares).all?(&:buyable)
         @show_corporation_size = @game.all_corporations.any? { |c| @game.show_corporation_size?(c) }
         @hide_companies = @game.all_corporations.reject(&:minor?).flat_map(&:companies).none?
-        @hide_connection_runs = @game.connection_runs.none?
+        @hide_connection_runs = !@game.respond_to?(:connection_runs) || @game.connection_runs.none?
 
         children = []
         children << render_table
