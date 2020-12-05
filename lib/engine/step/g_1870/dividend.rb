@@ -17,6 +17,10 @@ module Engine
 
           {}
         end
+
+        def holder_for_corporation(entity)
+          entity
+        end
       end
     end
   end

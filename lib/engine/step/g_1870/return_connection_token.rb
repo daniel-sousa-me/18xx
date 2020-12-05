@@ -43,25 +43,25 @@ module Engine
         end
 
         def choices
-          options = ['Charter']
-          unless @round.connection_runs[current_entity].tile.cities.any? { |c| c.tokened_by?(current_entity) }
-            options << 'Map'
-          end
+          destination = @round.connection_runs[current_entity]
+          return ['Map', 'Charter'] unless destination.tile.cities.any? { |c| c.tokened_by?(current_entity) }
 
-          options
+          ['Charter']
         end
 
         def process_choose(action)
           entity = action.entity
           destination = @round.connection_runs[entity]
+          ability = entity.abilities(:assign_hexes).first
 
           token = Engine::Token.new(action.entity, price: 100)
           entity.tokens << token
 
           if action.choice == 'Map'
             destination.tile.cities.first.place_token(entity, token, free: true, outside: true)
+            ability.description = "Reached " + ability.description
           else
-            entity.remove_ability(entity.abilities(:assign_hexes).first)
+            entity.remove_ability(ability)
           end
 
           destination.remove_assignment!(entity)

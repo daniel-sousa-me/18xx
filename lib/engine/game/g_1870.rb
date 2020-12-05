@@ -47,9 +47,9 @@ module Engine
       )
 
       ASSIGNMENT_TOKENS = {
-        'GSC' => '/icons/1870/GSC.svg',
-        'GSCᶜ' => '/icons/1870/GSC_closed.svg',
-        'SCC' => '/icons/1870/SCC.svg',
+        'GSC' => '/icons/1870/gsc_token.svg',
+        'GSCᶜ' => '/icons/1870/gsc_closed_token.svg',
+        'SCC' => '/icons/1870/scc_token.svg',
       }.freeze
 
       P_HEXES = %w[J5 B11 C18 N17].freeze

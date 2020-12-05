@@ -8,8 +8,11 @@ module Engine
       class Assign < Assign
         def available_hex(entity, hex)
           if entity == @game.port_company
-            return [hex.id] if hex.assigned?(entity.id)
-            return
+            @assigned_hexes ||= @game.hexes.select{ |h| h.assigned?(entity.id) }
+            if @assigned_hexes.any?
+              return @assigned_hexes if @assigned_hexes.any?(hex)
+              return
+            end
           end
 
           super
@@ -21,7 +24,11 @@ module Engine
 
           if hex.assigned?(entity.id) && entity == @game.port_company
             hex.remove_assignment!('GSC')
-            hex.assign!('GSC closed', entity.owner)
+            hex.assign!('GSCᶜ', entity.owner)
+
+            entity.owner.remove_assignment!('GSC')
+            entity.owner.assign!('GSCᶜ')
+
             entity.close!
 
             @log << 'The port is closed'

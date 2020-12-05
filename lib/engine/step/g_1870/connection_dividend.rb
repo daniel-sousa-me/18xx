@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../dividend'
+require_relative 'dividend'
 
 module Engine
   module Step
