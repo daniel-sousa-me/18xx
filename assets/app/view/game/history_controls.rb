@@ -16,7 +16,7 @@ module View
         divs = []
         cursor = Lib::Params['action']&.to_i
 
-        if cursor&.positive?
+        if !cursor&.zero?
           previous_round =
             if cursor == @game.actions.size
               @game.round_history[-2]
@@ -25,9 +25,9 @@ module View
             end
         end
 
-        divs << link('|<', 'Start', 0, !cursor&.positive?)
+        divs << link('|<', 'Start', 0, cursor&.zero?)
         divs << link('<<', 'Previous Round', previous_round, !previous_round)
-        divs << link('<', 'Previous Action', cursor ? cursor - 1 : @num_actions - 1, !cursor&.positive?)
+        divs << link('<', 'Previous Action', cursor ? cursor - 1 : @num_actions - 1, cursor&.zero?)
 
         divs << link_container('')
 
@@ -43,14 +43,14 @@ module View
         h(:div, { style: { margin: '0.5rem', textAlign: 'center' } }, divs)
       end
 
-      def link_container(content, disabled)
+      def link_container(content, disabled = false)
         props = { style: { margin: '0 1rem' } }
         props[:style][:opacity] = 0.4 if disabled
 
         h(:span, props, content)
       end
 
-      def link(text, title, action_id, disabled=false)
+      def link(text, title, action_id, disabled = false)
         content = disabled ? text : [history_link(text, title, action_id)]
         link_container(content, disabled)
       end
