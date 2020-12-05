@@ -1071,7 +1071,7 @@ module Engine
         self.class::TILE_LAYS
       end
 
-      def upgrades_to?(from, to, special = false)
+      def upgrades_to?(from, to, special = false, ignore_label = false)
         # correct color progression?
         return false unless Engine::Tile::COLORS.index(to.color) == (Engine::Tile::COLORS.index(from.color) + 1)
 
@@ -1082,7 +1082,7 @@ module Engine
         return true if special
 
         # correct label?
-        return false if from.label != to.label
+        return false if from.label != to.label && !ignore_label
 
         # honors existing town/city counts?
         # - allow labelled cities to upgrade regardless of count; they're probably
