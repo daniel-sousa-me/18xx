@@ -57,6 +57,10 @@ module Engine
           end
         end
 
+        def can_sell?(entity, bundle)
+          super && bundle.corporation.holding_ok?(entity, -bundle.percent)
+        end
+
         def process_buy_shares(action)
           super
           return unless action.entity.corporation?
