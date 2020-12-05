@@ -25,6 +25,8 @@ module View
         @hide_ipo = @game.all_corporations.reject(&:minor?).all?(&:always_market_price)
         @hide_reserved = @game.all_corporations.reject(&:minor?).flat_map(&:shares).all?(&:buyable)
         @show_corporation_size = @game.all_corporations.any? { |c| @game.show_corporation_size?(c) }
+        @hide_companies = @game.all_corporations.reject(&:minor?).flat_map(&:companies).none?
+        @hide_connection_runs = @game.connection_runs.none?
 
         children = []
         children << render_table
@@ -97,33 +99,9 @@ module View
           []
         else
           or_history(@game.all_corporations).map do |x|
-            if hist[x]
-              props = {
-                style: {
-                  opacity: case hist[x].dividend.kind
-                           when 'withhold'
-                             '0.5'
-                           when 'half'
-                             '0.75'
-                           else
-                             '1.0'
-                           end,
-                  textDecorationLine: hist[x].dividend.kind == 'half' ? 'underline' : '',
-                  textDecorationStyle: hist[x].dividend.kind == 'half' ? 'dotted' : '',
-                },
-              }
+            round = @game.or_description_short(*x)
 
-              if hist[x]&.dividend&.id&.positive?
-                link_h = history_link(hist[x].revenue.abs.to_s,
-                                      "Go to run #{x} of #{corporation.name}",
-                                      hist[x].dividend.id - 1)
-                h(:td, props, [link_h])
-              else
-                h(:td, props, hist[x].revenue.abs.to_s)
-              end
-            else
-              h(:td, '')
-            end
+            h(:td, hist[x] ? [render_dividend(round, hist[x], corporation)] : '')
           end
         end
       end
@@ -152,6 +130,7 @@ module View
         extra << h(:th, render_sort_link('Loans', :loans)) if @game.total_loans&.nonzero?
         extra << h(:th, render_sort_link('Shorts', :shorts)) if @game.respond_to?(:available_shorts)
         extra << h(:th, render_sort_link('Size', :size)) if @show_corporation_size
+        extra << h(:th, 'Companies') unless @hide_companies
 
         top =
           h(:tr, [
@@ -159,9 +138,9 @@ module View
             h(:th, th_props[@game.players.size], 'Players'),
             h(:th, th_props[@hide_reserved ? 2 : 3, true], 'Shares'),
             h(:th, th_props[@hide_ipo ? 1 : 2], 'Prices'),
-            h(:th, th_props[5 + extra.size, true, false], 'Corporation'),
+            h(:th, th_props[4 + extra.size, true, false], 'Corporation'),
             h(:th, ''),
-            h(:th, th_props[or_history_titles.size, false, false], 'OR History'),
+            h(:th, th_props[or_history_titles.size + (@hide_connection_runs ? 0 : 2), false, false], 'OR History'),
           ])
 
         bottom = [h(:th, { style: { paddingBottom: '0.3rem' } }, render_sort_link('SYM', :id))]
@@ -195,8 +174,8 @@ module View
 
         bottom = bottom.concat(extra)
 
-        bottom << h(:th, 'Companies')
         bottom << h(:th, '')
+        bottom << h(:th, { attrs: { colSpan: 2 } }, 'Conn') unless @hide_connection_runs
         bottom = bottom.concat(or_history_titles)
 
         [top, h(:tr, bottom)]
@@ -352,8 +331,18 @@ module View
           children << h(:td, @game.show_corporation_size?(corporation) ? corporation.total_shares.to_s : '')
         end
 
-        children << render_companies(corporation)
+        children << render_companies(corporation) unless @hide_companies
         children << h(:th, name_props, corporation.name)
+        unless @hide_connection_runs
+          if @game.connection_runs[corporation]
+            round = @game.or_description_short(*@game.connection_runs[corporation][:turn])
+            children << h(:td, round)
+            children << h(:td, [render_dividend(round, @game.connection_runs[corporation][:info], corporation)])
+          else
+            children << h(:td, '')
+            children << h(:td, '')
+          end
+        end
         children = children.concat(render_history(corporation))
 
         h(:tr, tr_props, children)
@@ -375,7 +364,7 @@ module View
           h('th.left', 'Cash'),
           *@game.players.map { |p| h('td.padded_number', @game.format_currency(p.cash)) },
           h(:td, { style: { backgroundColor: color_for(:bg) } }, ''),
-          h(:td, { style: { backgroundColor: color_for(:bg), color: color_for(:font) } },
+          h(:td, { style: { backgroundColor: color_for(:bg), color: color_for(:font), position: 'relative' } },
             [h(:div, { style: { position: 'absolute' } }, [h(Bank, game: @game)])]),
         ])
       end
@@ -415,6 +404,35 @@ module View
       def render_player_cert_count(player, cert_limit, props)
         num_certs = @game.num_certs(player)
         h('td.padded_number', num_certs > cert_limit ? props : '', num_certs)
+      end
+
+      def render_dividend(round, info, corporation)
+        kind = info.dividend.kind
+        revenue = info.revenue.abs.to_s
+
+        props = {
+          style: {
+            opacity: case kind
+                     when 'withhold'
+                       '0.5'
+                     when 'half'
+                       '0.75'
+                     else
+                       '1.0'
+                     end,
+            textDecorationLine: kind == 'half' ? 'underline' : '',
+            textDecorationStyle: kind == 'half' ? 'dotted' : '',
+          },
+        }
+
+        if info.dividend&.id&.positive?
+          link_h = history_link(revenue,
+                                "Go to run #{round} of #{corporation.name}",
+                                info.dividend.id - 1)
+          h(:span, props, [link_h])
+        else
+          h(:span, props, revenue)
+        end
       end
 
       def zebra_props(alt_bg = false)

@@ -7,7 +7,7 @@ module Engine
     module G1870
       class ReturnConnectionToken < Token
         def actions(_entity)
-          ['choose', 'pass']
+          %w[choose pass]
         end
 
         def description
@@ -44,7 +44,7 @@ module Engine
 
         def choices
           destination = @round.connection_runs[current_entity]
-          return ['Map', 'Charter'] unless destination.tile.cities.any? { |c| c.tokened_by?(current_entity) }
+          return %w[Map Charter] unless destination.tile.cities.any? { |c| c.tokened_by?(current_entity) }
 
           ['Charter']
         end
@@ -59,7 +59,7 @@ module Engine
 
           if action.choice == 'Map'
             destination.tile.cities.first.place_token(entity, token, free: true, outside: true)
-            ability.description = "Reached " + ability.description
+            ability.description = 'Reached ' + ability.description
           else
             entity.remove_ability(ability)
           end
@@ -71,7 +71,7 @@ module Engine
           pass!
         end
 
-        def process_pass(action)
+        def process_pass(_action)
           @round.connection_runs.shift
           @round.skip_connection_check = true
         end
