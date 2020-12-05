@@ -16,7 +16,7 @@ module View
         divs = []
         cursor = Lib::Params['action']&.to_i
 
-        if !cursor&.zero?
+        unless cursor&.zero?
           previous_round =
             if cursor == @game.actions.size
               @game.round_history[-2]

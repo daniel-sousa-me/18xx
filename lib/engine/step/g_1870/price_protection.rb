@@ -70,8 +70,8 @@ module Engine
                        "of #{bundle.corporation.name} for #{@game.format_currency(price)}"
         end
 
-        def skip!(action)
-          return process_pass(action, true) if price_protection
+        def skip!
+          return process_pass(nil, true) if price_protection
 
           super
         end

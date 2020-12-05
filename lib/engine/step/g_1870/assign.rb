@@ -8,9 +8,10 @@ module Engine
       class Assign < Assign
         def available_hex(entity, hex)
           if entity == @game.port_company
-            @assigned_hexes ||= @game.hexes.select{ |h| h.assigned?(entity.id) }
+            @assigned_hexes ||= @game.hexes.select { |h| h.assigned?(entity.id) }
             if @assigned_hexes.any?
               return @assigned_hexes if @assigned_hexes.any?(hex)
+
               return
             end
           end

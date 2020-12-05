@@ -27,6 +27,7 @@ module Engine
         def next_entity!
           check_connection_runs unless @skip_connection_check
           return if @connection_runs.any?
+
           @skip_connection_check = false
 
           super

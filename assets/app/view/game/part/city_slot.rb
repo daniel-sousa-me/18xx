@@ -51,7 +51,7 @@ module View
 
           props[:attrs][:transform] = rotation_for_layout if @edge
 
-          if @slot_index >= @city.normal_slots
+          if @city && @slot_index >= @city.normal_slots
             children << h(:defs, [
               h(:filter, { attrs: { id: 'shadow', x: '-50%', y: '-50%', width: '200%', height: '200%' } }, [
                 h(:feOffset, attrs: { result: 'offOut', in: 'SourceAlpha', dx: 2, dy: 2 }),
