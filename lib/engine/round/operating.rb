@@ -70,6 +70,7 @@ module Engine
         if (ability = teleported?(entity))
           entity.remove_ability(ability)
         end
+        @changed_hexes = []
         entity.trains.each { |train| train.operated = false }
         @log << "#{entity.owner.name} operates #{entity.name}" unless finished?
         @game.place_home_token(entity) if @home_token_timing == :operate
