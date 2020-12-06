@@ -39,6 +39,7 @@ module View
         return nil if @hex.empty
 
         @selected = @hex == @tile_selector&.hex || @selected_route&.last_node&.hex == @hex
+        @changed_hex = @game.round.changed_hexes.any?(@hex) if @game
         @tile =
           if @selected && @actions.include?('lay_tile') && @tile_selector&.tile
             @tile_selector.tile
@@ -71,7 +72,8 @@ module View
         props[:attrs][:cursor] = 'pointer' if @clickable
 
         props[:on] = { click: ->(e) { on_hex_click(e) } }
-        props[:attrs]['stroke-width'] = 5 if @selected
+        props[:attrs]['stroke-dasharray'] = '10, 5' if !@selected && @changed_hex
+        props[:attrs]['stroke-width'] = 5 if @selected || @changed_hex
         h(:g, props, children)
       end
 

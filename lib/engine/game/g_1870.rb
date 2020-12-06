@@ -223,13 +223,14 @@ module Engine
           end
       end
 
-      def upgrades_to?(from, to, _special = false)
+      def upgrades_to?(from, to, special = false)
         return to.name == '170' if from.color == :green && P_HEXES.include?(from.hex.name)
 
         return to.name == '171K' if from.color == :brown && from.hex.name == 'B11'
         return to.name == '172L' if from.color == :brown && from.hex.name == 'C18'
 
         super(from, to, false, to.cities.any? && %i[yellow green].include?(to.color))
+        super(from, to, special, to.cities.size.positive? && %i[yellow green].any?(to.color))
       end
 
       def border_impassable?(border)
