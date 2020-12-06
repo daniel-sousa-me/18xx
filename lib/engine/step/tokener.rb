@@ -56,6 +56,8 @@ module Engine
           @log.action! "places a token on #{hex.name} (#{hex.location_name})#{price_log}"
         end
 
+        @round.changed_hexes << hex
+
         @game.graph.clear
       end
 
