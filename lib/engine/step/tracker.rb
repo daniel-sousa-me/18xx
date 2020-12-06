@@ -89,6 +89,8 @@ module Engine
 
         hex.lay(tile)
 
+        @round.changed_hexes << hex
+
         @game.graph.clear
         free = false
         discount = 0

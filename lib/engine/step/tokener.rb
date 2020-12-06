@@ -86,6 +86,8 @@ module Engine
         end
 
         @round.tokened = true unless extra
+        @round.changed_hexes << hex
+
         @game.graph.clear
       end
 
