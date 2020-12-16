@@ -55,7 +55,7 @@ module Engine
       P_HEXES = %w[J5 B11 C18 N17].freeze
 
       def stock_round
-        Round::Stock.new(self, [
+        Round::G1870::Stock.new(self, [
           Step::DiscardTrain,
           Step::G1870::BuySellParShares,
           Step::G1870::PriceProtection,
@@ -64,12 +64,13 @@ module Engine
 
       def operating_round(round_num)
         Round::G1870::Operating.new(self, [
-          Step::G1870::ReturnConnectionToken,
+          Step::G1870::ConnectionToken,
           Step::G1870::ConnectionRoute,
           Step::G1870::ConnectionDividend,
           Step::Bankrupt,
           Step::Exchange,
           Step::DiscardTrain,
+          Step::G1870::PriceProtection,
           Step::G1870::SpecialTrack,
           Step::G1870::Assign,
           Step::G1870::BuyCompany,
@@ -136,6 +137,10 @@ module Engine
           corp = removal[:corporation]
           @log << "-- Event: #{corp}'s #{company_by_id(company).name} token removed from #{hex} --"
         end
+      end
+
+      def company_by_id(id)
+        return super('GSC') if id == 'GSCᶜ'
       end
 
       def river_company
@@ -206,7 +211,7 @@ module Engine
         revenue
       end
 
-      def sell_shares_and_change_price(bundle, _allow_president_change: true, _swap: nil)
+      def sell_shares_and_change_price(bundle, allow_president_change: true, swap: nil)
         @round.sell_queue << bundle
 
         @share_pool.sell_shares(bundle)

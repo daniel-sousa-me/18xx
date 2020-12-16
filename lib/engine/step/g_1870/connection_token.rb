@@ -5,7 +5,7 @@ require_relative '../token'
 module Engine
   module Step
     module G1870
-      class ReturnConnectionToken < Token
+      class ConnectionToken < Token
         def actions(_entity)
           %w[choose pass]
         end
@@ -60,12 +60,17 @@ module Engine
           if action.choice == 'Map'
             destination.tile.cities.first.place_token(entity, token, free: true, outside: true)
             ability.description = 'Reached ' + ability.description
+
+            @log.action! 'places destination token on the map with bonus'
           else
             entity.remove_ability(ability)
+            @log.action! 'puts destination token on the charter for later use, forfeiting the bonus'
           end
 
           destination.remove_assignment!(entity)
           entity.trains.each { |train| train.operated = false }
+          # Rename this file
+          # Log this choice
 
           @round.connection_steps << self
           pass!
