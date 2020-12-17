@@ -2,7 +2,8 @@
 
 module Engine
   class SharePrice
-    attr_reader :coordinates, :price, :corporations, :can_par, :type, :types
+    attr_reader :coordinates, :corporations, :can_par, :type, :types
+    attr_accessor :price
 
     TYPE_MAP = {
       'p' => :par,

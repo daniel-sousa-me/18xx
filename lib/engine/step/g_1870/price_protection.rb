@@ -24,6 +24,10 @@ module Engine
           { sell_queue: [] }
         end
 
+        def swap_buy(_player, _corporation, _ipo_or_pool_share); end
+
+        def swap_sell(_player, _corporation, _bundle, _pool_share); end
+
         def purchasable_companies(_entity = nil)
           []
         end

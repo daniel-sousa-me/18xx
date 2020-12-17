@@ -24,6 +24,10 @@ module Engine
           @round.connection_runs.keys.first
         end
 
+        def active_entities
+          @round.connection_runs || []
+        end
+
         def context_entities
           @round.entities
         end

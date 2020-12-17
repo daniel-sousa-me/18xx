@@ -331,6 +331,8 @@ module Engine
         },
         {
           "type":"tile_lay",
+          "when": "track",
+          "discount": 40,
           "owner_type": "corporation",
           "count": 1,
           "reachable": true,
