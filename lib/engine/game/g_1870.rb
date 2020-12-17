@@ -72,7 +72,7 @@ module Engine
           Step::DiscardTrain,
           Step::G1870::PriceProtection,
           Step::G1870::SpecialTrack,
-          Step::Assign,
+          Step::G1870::Assign,
           Step::G1870::BuyCompany,
           Step::G1870::SpecialTrack,
           Step::G1870::Track,
@@ -182,7 +182,7 @@ module Engine
       end
 
       def assignment_tokens(assignment)
-        return "/icons/#{assignment.logo_filename}" if assignment.is_a?(Engine::Corporation)
+        return "/logos/gray_#{assignment.logo_filename}" if assignment.is_a?(Engine::Corporation)
 
         super
       end

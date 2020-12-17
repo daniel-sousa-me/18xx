@@ -1427,7 +1427,6 @@ module Engine
         transferred = ownables.dup
         ownables.clear
         transferred
-      end
 
       def assignment_tokens(assignment)
         self.class::ASSIGNMENT_TOKENS[assignment]

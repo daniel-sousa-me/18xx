@@ -39,6 +39,7 @@ module Engine
         def check_connection_runs
           @connection_runs = {}
           corporations = @game.corporations.dup.sort
+
           if current_entity && corporations.any?(current_entity)
             corporations.unshift(corporations.delete(current_entity))
           end
