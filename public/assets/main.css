@@ -9,6 +9,8 @@
 a {
   color: currentColor;
   text-decoration: none;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
 }
 
 button, .button_link {
@@ -22,6 +24,7 @@ button, .button_link {
   line-height: 1rem;
   cursor: pointer;
   text-decoration: none;
+  text-shadow: none;
 }
 .button_link {
   display: inline-block; /* else padding doesn’t work => different height than button */
@@ -135,6 +138,10 @@ nav#game_menu {
     padding-bottom: 1.5rem;
   }
 }}
+
+nav#game_menu a {
+  text-shadow: none;
+}
 
 .nowrap {
   overflow: hidden;
