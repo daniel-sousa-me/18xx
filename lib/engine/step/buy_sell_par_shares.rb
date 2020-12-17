@@ -27,7 +27,7 @@ module Engine
         actions
       end
 
-      def log_pass(_entity)
+      def log_pass(entity)
         return @log.action! 'passes' if @current_actions.empty?
 
         action = bought? ? 'to sell' : 'to buy'

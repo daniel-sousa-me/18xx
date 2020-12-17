@@ -9,7 +9,7 @@
 a {
   color: currentColor;
   text-decoration: none;
-  text-shadow: 2px 2px 2px #7f7f7f;
+  text-shadow: 0 1px 1px #555, 1px 0 1px #aaa;
 }
 
 button, .button_link {
@@ -23,6 +23,7 @@ button, .button_link {
   line-height: 1rem;
   cursor: pointer;
   text-decoration: none;
+  text-shadow: none;
 }
 button.small {
   padding: 0.2rem 0.5rem;

@@ -55,7 +55,7 @@ module Engine
       P_HEXES = %w[J5 B11 C18 N17].freeze
 
       def stock_round
-        Round::G1870::Stock.new(self, [
+        Round::Stock.new(self, [
           Step::DiscardTrain,
           Step::G1870::BuySellParShares,
           Step::G1870::PriceProtection,
