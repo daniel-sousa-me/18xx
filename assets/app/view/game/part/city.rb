@@ -243,6 +243,8 @@ module View
 
           region_weights =
             case @city.slots
+            when 0
+              []
             when 1
               CENTER
             when (2..4)
@@ -270,7 +272,7 @@ module View
         end
 
         def render_part
-          slots = (0..(@city.slots - 1)).zip(@city.tokens).map do |slot_index, token|
+          slots = (0..(@city.slots - 1)).zip(@city.all_tokens).map do |slot_index, token|
             slot_rotation = (360 / @city.slots) * slot_index
 
             # use the rotation on the outer <g> to position the slot, then use

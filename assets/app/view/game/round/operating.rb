@@ -31,6 +31,7 @@ module View
           left << h(BuySpecial) if @current_actions.include?('buy_special')
           left << h(RouteSelector) if @current_actions.include?('run_routes')
           left << h(Dividend) if @current_actions.include?('dividend')
+          left << h(Choose) if @current_actions.include?('choose')
 
           if @current_actions.include?('buy_train')
             left << h(IssueShares) if @current_actions.include?('sell_shares')

@@ -13,15 +13,15 @@ module Engine
         end
 
         def active?
-          @round.connection_runs.any?
-        end
-
-        def active_entities
-          @round.connection_runs || []
+          @round.connection_runs.any? && !passed?
         end
 
         def override_entities
-          @round.connection_runs
+          @round.connection_runs.keys
+        end
+
+        def current_entity
+          @round.connection_runs.keys.first
         end
 
         def context_entities
@@ -33,20 +33,9 @@ module Engine
         end
 
         def process_run_routes(action)
-          if (ability = action.corporation.abilities(:assign_hexes).first)
-            home = action.corporation.tokens.first.city&.hex
-            destination = @game.hexes.find { |h| h.name == ability.hexes.first }
-
-            connection = action.routes.any? do |route|
-              [home, destination].difference(route.visited_stops).none?
-            end
-
-            unless connection
-              return @game.game_error('At least one train has to run from the home station to the destination')
-            end
-          end
-
           super
+
+          @round.connection_steps << self
         end
       end
     end

@@ -6,26 +6,32 @@ require_relative 'revenue_center'
 module Engine
   module Part
     class City < RevenueCenter
-      attr_accessor :reservations
+      attr_accessor :reservations, :outside_tokens
       attr_reader :tokens
 
       def initialize(revenue, **opts)
         super
         @slots = (opts[:slots] || 1).to_i
         @tokens = Array.new(@slots)
+        @outside_tokens = []
         @reservations = []
       end
 
       def slots
-        @tokens.size
+        all_tokens.size
       end
 
       def normal_slots
         @slots
       end
 
+      def all_tokens
+        @tokens + @outside_tokens
+      end
+
       def remove_tokens!
         @tokens.map! { nil }
+        @outside_tokens = []
       end
 
       def blocks?(corporation)
@@ -38,7 +44,7 @@ module Engine
       end
 
       def tokened_by?(corporation)
-        @tokens.any? { |t| t&.corporation == corporation }
+        (@tokens + @outside_tokens).any? { |t| t&.corporation == corporation }
       end
 
       def find_reservation(corporation)
@@ -94,18 +100,22 @@ module Engine
         reservation || open_slot
       end
 
-      def place_token(corporation, token, free: false, check_tokenable: true, cheater: false)
-        if check_tokenable && !tokenable?(corporation, free: free, tokens: token, cheater: cheater)
-          raise GameError, "#{corporation.name} cannot lay token on #{id} #{tile.hex&.id}"
+      def place_token(corporation, token, free: false, check_tokenable: true, cheater: false, outside: false)
+        if check_tokenable && !outside && !tokenable?(corporation, free: free, tokens: token, cheater: cheater)
+          raise GameError, "#{corporation.name} cannot lay token on #{id}"
         end
 
-        exchange_token(token, cheater: cheater)
+        exchange_token(token, cheater: cheater, outside: outside)
         tile.reservations.delete(corporation)
       end
 
-      def exchange_token(token, cheater: false)
+      def exchange_token(token, cheater: false, outside: false)
         token.place(self)
-        @tokens[get_slot(token.corporation, cheater: cheater)] = token
+        if outside
+          @outside_tokens << token
+        else
+          @tokens[get_slot(token.corporation, cheater: cheater)] = token
+        end
       end
     end
   end

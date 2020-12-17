@@ -5,6 +5,7 @@ module View
     class Token < Snabberb::Component
       needs :token
       needs :radius
+      needs :cheater, default: false
 
       RED_WIDTH = 7
       WHITE_WIDTH = 2

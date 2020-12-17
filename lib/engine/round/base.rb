@@ -61,11 +61,6 @@ module Engine
         active_step&.active_entities || []
       end
 
-      # TODO: This is deprecated
-      def can_act?(entity)
-        active_step&.current_entity == entity
-      end
-
       def teleported?(_entity)
         false
       end

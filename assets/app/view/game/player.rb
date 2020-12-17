@@ -17,7 +17,7 @@ module View
 
       def render
         card_style = {
-          border: @game.round.can_act?(@player) ? '4px solid' : '1px solid gainsboro',
+          border: @game.round.current_entity == @player ? '4px solid' : '1px solid gainsboro',
           paddingBottom: '0.2rem',
         }
         card_style[:display] = @display

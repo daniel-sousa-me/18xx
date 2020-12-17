@@ -5,6 +5,8 @@ require_relative 'base'
 module Engine
   module Step
     module Tracker
+      attr_accessor :laid_track
+
       def setup
         @upgraded = false
         @laid_track = 0
@@ -249,7 +251,7 @@ module Engine
         new_ctedges = tile.city_town_edges
         extra_cities = [0, new_ctedges.size - old_ctedges.size].max
 
-        new_exits.all? { |edge| hex.neighbors[edge] } &&
+        (available_hex(entity, hex)) && new_exits.all? { |edge| hex.neighbors[edge] } &&
           (new_exits & available_hex(entity, hex)).any? &&
           old_paths.all? { |path| new_paths.any? { |p| path <= p } } &&
           # Count how many cities on the new tile that aren't included by any of the old tile.

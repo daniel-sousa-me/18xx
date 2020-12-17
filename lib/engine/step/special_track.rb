@@ -74,6 +74,7 @@ module Engine
         ability = entity.abilities(:tile_lay, time: 'sold', &block) if @round.respond_to?(:just_sold_company) &&
           entity == @round.just_sold_company
         ability || entity.abilities(:tile_lay, time: 'track', &block)
+        ability || entity.abilities(:tile_lay, time: 'track', &block)
       end
 
       def check_connect(_action, ability)

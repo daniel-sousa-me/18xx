@@ -26,9 +26,8 @@ module View
           h('button', props, label)
         end
 
-        div_class = choice_buttons.size < 5 ? '.inline' : ''
         h(:div, [
-          h("div#{div_class}", { style: { marginTop: '0.5rem' } }, "#{@game.round.active_step.choice_name}:"),
+          h("div", { style: { marginTop: '0.5rem' } }, "#{@game.round.active_step.choice_name}:"),
           *choice_buttons,
         ])
       end
