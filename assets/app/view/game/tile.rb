@@ -69,6 +69,7 @@ module View
         children << render_tile_part(Part::Icons) if @tile.icons.any?
 
         children << render_tile_part(Part::Assignments) if @tile.hex.assignments.any?
+
         # borders should always be the top layer
         children << borders if borders
         children << render_tile_part(Part::Partitions) if @tile.partitions.any?

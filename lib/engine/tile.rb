@@ -443,13 +443,13 @@ module Engine
       false
     end
 
-    def revenue_to_render
-      @revenue_to_render ||= @stops.map(&:revenue_to_render)
-    end
-
     # Used to set label for a recently placed tile
     def label=(label_name)
       @label = Part::Label.new(label_name)
+    end
+
+    def revenue_to_render
+      @revenue_to_render ||= @stops.map(&:revenue_to_render)
     end
 
     def restore_borders(edges = nil)
