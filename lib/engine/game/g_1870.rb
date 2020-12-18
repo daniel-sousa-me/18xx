@@ -166,7 +166,8 @@ module Engine
       def purchasable_companies(entity = nil)
         entity ||= current_entity
         return super unless @phase.name == '1'
-        return [river_company] if [mp_corporation, ssw_corporation].include?(entity)
+
+        return [river_company] if [mp_corporation, ssw_corporation].include?(entity) && river_company.owner.player?
 
         []
       end
