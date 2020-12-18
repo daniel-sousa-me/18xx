@@ -53,6 +53,7 @@ module View
       render_row(children, 'Finished Games', grouped['finished'], :finished)
 
       game_refresh
+      get_games if @games.empty?
 
       acting = your_games.any? { |game| user_is_acting?(@user, game) }
       `document.title = #{(acting ? '* ' : '') + '18xx.Games'}`
@@ -75,7 +76,6 @@ module View
     end
 
     def game_refresh
-      return unless @user
       return if @refreshing
 
       timeout = %x{
