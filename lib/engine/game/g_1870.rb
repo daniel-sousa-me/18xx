@@ -67,11 +67,7 @@ module Engine
 
       def operating_round(round_num)
         Round::G1870::Operating.new(self, [
-<<<<<<< HEAD
           Step::G1870::ConnectionToken,
-=======
-          Step::G1870::ReturnConnectionToken,
->>>>>>> 0ecfefb0 (1870: Connection runs, improved rendering)
           Step::G1870::ConnectionRoute,
           Step::G1870::ConnectionDividend,
           Step::Bankrupt,
