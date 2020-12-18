@@ -40,6 +40,7 @@ module Engine
 
       DEV_STAGES = %i[production beta alpha prealpha].freeze
       DEV_STAGE = :prealpha
+      ENABLED = false
 
       GAME_LOCATION = nil
       GAME_RULES_URL = nil

@@ -9,7 +9,6 @@ module View
 
     def render
       children = [render_notification]
-      children << render_introduction if @show_intro
       children << render_buttons
 
       h('div#welcome.half', children)
@@ -17,26 +16,13 @@ module View
 
     def render_notification
       message = <<~MESSAGE
-        <p>1817WO is now in alpha!</p>
-        <p>1860 is now in alpha!</p>
-        <p>1817NA and 18MEX are now in beta!</p>
-        <p>1817 is in production!</p>
+        <p>This is an copy of the site <a href="https://18xx.games">18xx.games</a> by Toby Mao and contributors.</p>
 
-        <p>Please file <a href='https://github.com/tobymao/18xx/issues'>issues and ideas</a> on
-        <a href='https://github.com/tobymao/18xx/issues'>GitHub</a>.<br>
-        If you have any questions, check out the <a href="https://github.com/tobymao/18xx/wiki/FAQ">FAQ</a> and other
-        resources in our <a href='https://github.com/tobymao/18xx/wiki'>Wiki!</a>
-        </p>
+        <p>This is intended to help test an alpha version of 1870. All other games are disabled.</p>
 
-        <p>Support our publishers: #{Lib::Publisher.link_list.join}.</p>
-        <p>You can support this project on <a href='https://www.patreon.com/18xxgames'>Patreon</a>.</p>
+        <p>The accounts here are independent from the ones on the real site, because I don't have access to your passwords. You'll have to create a new account here. As usual you are advised to use a different password.</p>
 
-        <p>Consider joining the
-        <a href='https://join.slack.com/t/18xxgames/shared_invite/zt-8ksy028m-CSZC~G5QtiFv60_jdqqulQ'>18xx slack</a>.
-        General 18xx.games discussion is in <a href='https://18xxgames.slack.com/archives/CV3R3HPUZ'>#18xxgames</a>,
-        development discussion is in <a href='https://18xxgames.slack.com/archives/C012K0CNY5C'>#18xxgamesdev</a>
-        (you can ask about bugs there), and general 18xx chat in <a href='https://18xxgames.slack.com/archives/C68J3MK2A'>#general</a>.
-        </p>
+        <p>Email notifications are disabled, so you can put a bogus email address</p>
       MESSAGE
 
       props = {
@@ -51,28 +37,6 @@ module View
       }
 
       h('div#notification.padded', props)
-    end
-
-    def render_introduction
-      message = <<~MESSAGE
-        <p>18xx.games is a website where you can play async or real-time 18xx games (based on the system originally devised by the brilliant Francis Tresham)!
-        <p>Right now, 1817, 1817NA, 1836Jr30, 1846, 1882, 1889, 18AL, 18Chesapeake, 18GA, 18 Los Angeles, 18MEX, 18MS, and 18TN are implemented.</br>
-        If you are new to 18xx games then 1889, 18Chesapeake, or 18MS are good games to begin with.</p>
-
-        <p>You can play locally with hot seat mode without an account. If you want to play multiplayer, you'll need to create an account.</p>
-
-        <p>If you look at other people's games, you can make moves to play around but it won't affect them and changes won't be saved.
-        You can clone games in the tools tab and then play around locally.</p>
-
-        <p>In multiplayer games, you'll also be able to make moves for other players, this is so people can say 'pass me this SR' and you don't
-        need to wait. To use this feature in a game, enable "Master Mode" in the Tools tab. Please use it politely!</p>
-      MESSAGE
-
-      props = {
-        props: { innerHTML: message },
-      }
-
-      h('div#introduction', props)
     end
 
     def render_buttons

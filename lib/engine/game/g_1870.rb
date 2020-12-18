@@ -25,6 +25,9 @@ module Engine
       GAME_DESIGNER = 'Bill Dixon'
       GAME_INFO_URL = 'https://github.com/tobymao/18xx/wiki/1870'
 
+      DEV_STAGE = :alpha
+      ENABLED = true
+
       EBUY_PRES_SWAP = false
       EBUY_OTHER_VALUE = false
 
