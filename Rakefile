@@ -95,7 +95,7 @@ task :precompile do
   bundle = Assets.new(cache: false, make_map: false, compress: true, gzip: true).combine
 
   # Copy to the pin directory
-  git_rev = `git rev-parse --short HEAD`.strip
+  git_rev = `git rev-parse --short master`.strip
   pin_dir = Assets::OUTPUT_BASE + Assets::PIN_DIR
   File.write(Assets::OUTPUT_BASE + '/assets/version.json', JSON.dump(
     hash: git_rev,
