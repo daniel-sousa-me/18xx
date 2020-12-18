@@ -4,7 +4,7 @@ require 'lib/storage'
 
 module UserManager
   def self.included(base)
-    base.needs :user, default: nil, store: true
+    base.needs :user, default: Lib::Storage['user'], store: true
     base.needs :app_route, default: nil, store: true
     base.needs :flash_opts, default: {}, store: true
     base.needs :connection, default: nil, store: true
@@ -60,12 +60,14 @@ module UserManager
   private
 
   def login_user(data)
+    Lib::Storage['user'] = data['user']
     store(:user, data['user'], skip: true)
     store(:games, data['games'], skip: true)
     store(:app_route, '/')
   end
 
   def invalidate_user
+    Lib::Storage['user'] = nil
     store(:user, nil, skip: true)
   end
 end
