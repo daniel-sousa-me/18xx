@@ -9,6 +9,8 @@ module View
     needs :user, default: nil, store: true
 
     def render
+      store(:user, Lib::Storage['user'], skip: true) if !@user && Lib::Storage['user']
+
       other_links = [item('About', '/about')]
 
       if @user
