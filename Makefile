@@ -53,3 +53,7 @@ prod_deploy :
 		public/assets/version.json \
 		deploy@18xx:~/18xx/public/assets/ && \
 		ssh -l deploy 18xx "source ~/.profile && cd ~/18xx/ && git pull && make prod_rack_up_b_d"
+
+18ui_deploy :
+	docker-compose run rack rake precompile && \
+		rsync -avzphP public/ www-data@ovh.sousa.me:/var/www/18ui
