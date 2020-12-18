@@ -117,7 +117,11 @@ module GameManager
     store(:app_route, game_url + `window.location.search`)
 
     @connection.safe_get(game_url) do |data|
-      next `window.location = #{game_url}` if data.dig('settings', 'pin')
+      pin = data.dig('settings', 'pin')
+      if pin
+        url = "#{game_url}?pin=#{pin}"
+        next `window.location = url`
+      end
 
       `window.history.replaceState(#{data.to_n}, #{@app_route}, #{@app_route})`
       store(:game_data, data, skip: false)
