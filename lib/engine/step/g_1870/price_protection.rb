@@ -6,7 +6,7 @@ require_relative '../buy_sell_par_shares'
 module Engine
   module Step
     module G1870
-      class PriceProtection < Base
+      class PriceProtection < BuySellParShares
         def actions(entity)
           return [] if !entity.player? || entity != current_entity
 
@@ -21,7 +21,11 @@ module Engine
         end
 
         def round_state
-          { sell_queue: [] }
+          super.merge(sell_queue: [])
+        end
+
+        def active_entities
+          @round.sell_queue.map(&:president)
         end
 
         def swap_buy(_player, _corporation, _ipo_or_pool_share); end
@@ -63,7 +67,7 @@ module Engine
             price: price
           )
 
-          @round.goto_entity!(player)
+          @round.goto_entity!(player) if @round.entities[@round.entity_index].player?
 
           num_presentation = @game.share_pool.num_presentation(bundle)
           @log.action! "price protects #{num_presentation} "\
@@ -73,7 +77,7 @@ module Engine
         def skip!
           return process_pass(nil, true) if price_protection
 
-          super
+          super if current_entity
         end
 
         def process_pass(_action, forced = false)
@@ -92,7 +96,7 @@ module Engine
 
           verb = forced ? 'can\'t' : 'doesn\'t'
           num_presentation = @game.share_pool.num_presentation(bundle)
-          @log << "#{player.name} #{verb} price protect #{num_presentation} of #{corporation.name}"
+          @log.action! "#{verb} price protect #{num_presentation} of #{corporation.name}"
 
           if current_ignore && !previous_ignore
             @log << "#{corporation.name} hits the ledge"
@@ -100,12 +104,8 @@ module Engine
           end
 
           @game.log_share_price(corporation, price)
-        end
 
-        def active_entities
-          return [] unless @round.sell_queue.any?
-
-          @round.sell_queue.map(&:president)
+          @round.recalculate_order if @round.respond_to?(:recalculate_order)
         end
       end
     end

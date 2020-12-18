@@ -70,7 +70,6 @@ module Engine
           Step::Bankrupt,
           Step::Exchange,
           Step::DiscardTrain,
-          Step::G1870::PriceProtection,
           Step::G1870::SpecialTrack,
           Step::G1870::Assign,
           Step::G1870::BuyCompany,
@@ -81,6 +80,7 @@ module Engine
           Step::G1870::Dividend,
           Step::BuyTrain,
           [Step::G1870::BuyCompany, blocks: true],
+          Step::G1870::PriceProtection,
         ], round_num: round_num)
       end
 
