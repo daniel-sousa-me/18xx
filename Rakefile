@@ -91,17 +91,17 @@ end
 desc 'Precompile assets for production'
 task :precompile do
   require_relative 'lib/assets'
-  bundle = Assets.new(cache: false, make_map: false, compress: true, gzip: true).combine
+  bundle = Assets.new(cache: false, make_map: false, compress: true).combine
 
   # Copy to the pin directory
-  git_rev = `git rev-parse --short HEAD`.strip
+  git_rev = `git rev-parse --short master`.strip
   pin_dir = Assets::OUTPUT_BASE + Assets::PIN_DIR
   File.write(Assets::OUTPUT_BASE + '/assets/version.json', JSON.dump(
     hash: git_rev,
     url: "https://github.com/tobymao/18xx/commit/#{git_rev}",
   ))
   FileUtils.mkdir_p(pin_dir)
-  FileUtils.cp("#{bundle}.gz", "#{pin_dir}/#{git_rev}.js.gz")
+  FileUtils.cp(bundle.to_s, "#{pin_dir}/#{git_rev}.js")
 end
 
 desc 'Profile loading data'
