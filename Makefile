@@ -52,3 +52,9 @@ prod_deploy : clean
 	$(CONTAINER_COMPOSE) run rack rake precompile && \
 		rsync --verbose --checksum public/assets/*.js public/assets/*.js.gz public/assets/version.json deploy@18xx:~/18xx/public/assets/ && \
 		ssh -l deploy 18xx "source ~/.profile && cd ~/18xx/ && git pull && make prod_rack_up_b_d"
+
+18ui_deploy : clean
+	docker-compose run rack rake precompile
+	git tag 18ui-`date +"%Y%m%d-%H%M%S"`-`git rev-parse --short master`
+	read void
+	rsync -avzphP public/ www-data@ovh2.sousa.me:/var/www/18ui

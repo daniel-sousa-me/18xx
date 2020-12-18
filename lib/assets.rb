@@ -228,8 +228,8 @@ class Assets
         source = (combine - prealphas).map { |file| File.read(file).to_s }.join
         source = compress('pin', source)
         File.write(pin_path.gsub('.gz', ''), source)
-        Zlib::GzipWriter.open(pin_path) { |gz| gz.write(source) }
-        FileUtils.rm(pin_path.gsub('.gz', ''))
+        #Zlib::GzipWriter.open(pin_path) { |gz| gz.write(source) }
+        #FileUtils.rm(pin_path.gsub('.gz', ''))
       end
   end
 

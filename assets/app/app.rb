@@ -31,6 +31,8 @@ class App < Snabberb::Component
   needs :production, default: nil
 
   def render
+    store(:user, Lib::Storage['user'], skip: true) unless @user
+
     props = {
       props: { id: 'app' },
       style: {
