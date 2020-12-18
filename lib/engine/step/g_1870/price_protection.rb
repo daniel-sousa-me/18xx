@@ -84,7 +84,6 @@ module Engine
           bundle = @round.sell_queue.shift
 
           corporation = bundle.corporation
-          player = bundle.president
           price = corporation.share_price.price
 
           previous_ignore = corporation.share_price.type == :ignore_one_sale

@@ -52,13 +52,13 @@ module Engine
       share_str += "of #{corporation.name}" unless entity == corporation
       incremental = corporation.capitalization == :incremental
 
-      if bundle.owner.corporation?
-        from = (bundle.owner == bundle.corporation ? "the #{@game.ipo_name(corporation)}" : bundle.owner.name)
-      elsif bundle.owner.player?
-        from = bundle.owner.name
-      else
-        from = 'the market'
-      end
+      from = if bundle.owner.corporation?
+               (bundle.owner == bundle.corporation ? "the #{@game.ipo_name(corporation)}" : bundle.owner.name)
+             elsif bundle.owner.player?
+               bundle.owner.name
+             else
+               'the market'
+             end
 
       if exchange
         price = exchange_price || 0
@@ -89,7 +89,7 @@ module Engine
           bundle,
           entity,
           spender: entity == self ? @bank : entity,
-          receiver: ((incremental && bundle.owner.corporation?) || bundle.owner.player?) ? bundle.owner : @bank,
+          receiver: (incremental && bundle.owner.corporation?) || bundle.owner.player? ? bundle.owner : @bank,
           price: price,
           swap: swap,
           swap_to_entity: swap ? self : nil

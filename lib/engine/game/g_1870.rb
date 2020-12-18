@@ -212,7 +212,7 @@ module Engine
         revenue
       end
 
-      def sell_shares_and_change_price(bundle, allow_president_change: true, swap: nil)
+      def sell_shares_and_change_price(bundle)
         @round.sell_queue << bundle
 
         @share_pool.sell_shares(bundle)
