@@ -57,11 +57,10 @@ module View
             render_player_shares,
             render_player_companies,
             render_player_certs,
-          ]),
-          h(:thead, [
             h(:tr, { style: { height: '1rem' } }, ''),
+            *render_player_history,
+            h(:tr, { style: { height: '100%' } }, ''),
           ]),
-          *render_player_history,
         ])
       end
 
@@ -436,21 +435,26 @@ module View
       end
 
       def render_player_cash
-        top_line_props = {
-          style: {
-            position: 'absolute',
-          },
-        }
-        top_line = [h(:div, top_line_props, [
+        extra = [
           h(Bank, game: @game),
           h(GameInfo, game: @game, layout: 'upcoming_trains'),
-        ])]
+        ]
+
+        extra_td_attrs = {
+          style: {
+            backgroundColor: color_for(:bg),
+            color: color_for(:font),
+            paddingLeft: '30px',
+            textAlign: 'left',
+            verticalAlign: 'top',
+          },
+          attrs: { colSpan: 1000, rowSpan: 1000 },
+        }
 
         h(:tr, zebra_props, [
           h('th.left', 'Cash'),
           *@game.players.map { |p| h('td.padded_number', @game.format_currency(p.cash)) },
-          h(:td, { style: { backgroundColor: color_for(:bg) } }, ''),
-          h(:td, { style: { backgroundColor: color_for(:bg), color: color_for(:font) } }, top_line),
+          h(:td, extra_td_attrs, extra),
         ])
       end
 
