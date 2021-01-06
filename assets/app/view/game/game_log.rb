@@ -10,6 +10,14 @@ module View
 
       needs :user, default: nil
       needs :chat_input, default: ''
+      needs :show_messages, default: true, store: true
+      needs :log_level, default: 2, store: true
+
+      LOG_LEVEL_TEXT = {
+        2 => 'Hide actions',
+        1 => 'Show effects',
+        0 => 'Show actions',
+      }.freeze
 
       def render
         children = [
@@ -36,32 +44,47 @@ module View
         end
 
         if participant?
-          children << h(:div, {
-                          style: {
-                            margin: '0 0 1vmin 0',
-                            display: 'flex',
-                            flexDirection: 'row',
-                          },
-                        }, [
+          chat_line = [
             h(:span, {
                 style: {
                   fontWeight: 'bold',
                   margin: 'auto 0',
                 },
               }, [@user['name'] + ':']),
-            h('input#chatbar',
-              attrs: {
-                autocomplete: 'off',
-                title: 'hotkey: c – esc to leave',
-                type: 'text',
-                value: @chat_input,
+            h('input#chatbar', {
+                attrs: {
+                 autocomplete: 'off',
+                 title: 'hotkey: c – esc to leave',
+                 type: 'text',
+                 value: @chat_input,
+                },
+                style: {
+                  marginLeft: '0.5rem',
+                  height: '1.25rem',
+                  flex: '1',
+                },
+                on: { keyup: key_event },
+              }),
+            h(:button, {
+                style: { height: '100%' },
+                on: { click: -> { store(:show_messages, !@show_messages) } },
               },
-              style: {
-                marginLeft: '0.5rem',
-                flex: '1',
+              @show_messages ? 'Hide messages' : 'Show messages'),
+            h(:button, {
+                style: { height: '100%' },
+                on: { click: -> { store(:log_level, (@log_level + 1) % 3) } },
               },
-              on: { keyup: key_event }),
-            ])
+              LOG_LEVEL_TEXT[@log_level]),
+          ]
+
+          children << h(:div, {
+                          style: {
+                            margin: '1vmin 0',
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                          },
+                        }, chat_line)
         end
 
         props = {
