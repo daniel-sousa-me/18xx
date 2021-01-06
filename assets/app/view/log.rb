@@ -8,6 +8,8 @@ module View
 
     needs :log
     needs :negative_pad, default: false
+    needs :show_messages, default: true, store: true
+    needs :log_level, default: 2, store: true
     needs :follow_scroll, default: true, store: true
 
     def render
@@ -83,8 +85,8 @@ module View
           time = line[:created_at]
           time_str = time.strftime('%R')
 
-          if date_previous < time.strftime('%Y%j').to_i
-            date_previous = time.strftime('%Y%j').to_i
+          if date_previous < time.strftime('%Y%m%d').to_i
+            date_previous = time.strftime('%Y%m%d').to_i
 
             date_line_props = { style: {
               marginTop: '1rem',
@@ -101,25 +103,28 @@ module View
 
         if line.is_a?(String)
           if line.start_with?('--')
+            is_event = true
             line_props[:style][:fontWeight] = 'bold'
             line_props[:style][:marginTop] = '0.4em'
             line_props[:style][:marginBottom] = '0.4em'
           else
+            is_event = false
             line_props[:style][:paddingLeft] = '2rem'
           end
 
-          children << h(:div, line_props, line)
+          children << h(:div, line_props, line) if @log_level > 1 || is_event
         elsif line.is_a?(Hash)
           require 'view/log_line'
-          children << if line[:type]
-                        h('div.logline', line_props, [h(LogLine, line: line)])
-                      else
-                        h('div.chatline', line_props, [
+          if line[:type]
+            elem = h(LogLine, line: line)
+            children << h('div.logline', line_props, [elem]) if elem
+          else
+            children << h('div.chatline', line_props, [
                           h('span.time', time_props, time_str),
                           h('span.username', username_props, line[:user][:name]),
                           h('span.message', message_props, line[:message]),
                         ])
-                      end
+          end
         end
       end
 
