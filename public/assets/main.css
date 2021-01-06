@@ -20,7 +20,7 @@ button, .button_link {
   border: solid 1px black;
   border-radius: 5px;
   padding: 0.2rem 1rem;
-  margin: 0.5rem 1rem 0 0;
+  margin: 0.25rem 0.5rem;
   line-height: 1rem;
   cursor: pointer;
   text-decoration: none;
