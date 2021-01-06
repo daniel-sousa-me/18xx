@@ -7,6 +7,8 @@ module View
 
     needs :line
     needs :app_route, default: nil, store: true
+    needs :show_messages, default: true, store: true
+    needs :log_level, default: 2, store: true
     needs :round_history, default: nil, store: true
 
     def render
@@ -32,39 +34,45 @@ module View
 
       case @line[:type]
       when :action
-        master_mode_props = { style: {
-          margin: '0.1rem',
-          fontSize: 'smaller',
-        },
+        if @log_level.positive?
+          master_mode_props = { style: {
+            margin: '0.1rem',
+            fontSize: 'smaller',
+          },
 }
 
-        children = [h('span.time', time_props, [history_link(time_str, "Go to action##{@line[:id]}", @line[:id])])]
+          children = [h('span.time', time_props, [history_link(time_str, "Go to action##{@line[:id]}", @line[:id])])]
 
-        # These spaces are appended to tell Chrome to separate words when selecting the text
-        children << h('span.username', username_props, @line[:entity_list].last + ' ') unless @line[:entity_list].empty?
+          unless @line[:entity_list].empty?
+            # These spaces are appended to tell Chrome to separate words when selecting the text
+            children << h('span.username', username_props, @line[:entity_list].last + ' ')
+          end
 
-        children << h('span.master_mode', master_mode_props, "(controlled by #{@line[:user]})") if @line[:user]
+          children << h('span.master_mode', master_mode_props, "(controlled by #{@line[:user]})") if @line[:user]
 
-        @line[:entity_list][0..-2].each { |e| children << h('span.entity', "· #{e} ") }
+          @line[:entity_list][0..-2].each { |e| children << h('span.entity', "· #{e} ") }
 
-        children << h('span.message', message_props, @line[:message])
+          children << h('span.message', message_props, @line[:message])
 
-        h(:span, children)
+          h(:span, children)
+        end
       when :message
         h(:span, [
           h('span.time', time_props, [history_link(time_str, "Go to action##{@line[:id]}", @line[:id])]),
           h('span.username', username_props, @line[:username]),
           h('span.separator', time_props, ' ➤ '),
           h('span.message', message_props, @line[:message]),
-        ])
+        ]) if @show_messages
       when :undo
-        undo_props = { style: {
-          margin: '-0.2rem',
-          fontSize: '0.7rem',
-        },
+        if @log_level.positive?
+          undo_props = { style: {
+            margin: '-0.2rem',
+            fontSize: '0.7rem',
+          },
 }
 
-        h('div.undo', undo_props, '↺')
+          h('div.undo', undo_props, '↺')
+        end
       end
     end
   end
