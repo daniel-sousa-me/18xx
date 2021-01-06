@@ -29,20 +29,20 @@ module View
 
         @hidden_divs = {}
 
-        select_corporation = lambda do
-          if @selectable
-            selected_corporation = selected? ? nil : @corporation
-            store(:selected_corporation, selected_corporation)
-          end
+        #select_corporation = lambda do
+        #  if @selectable
+        #    selected_corporation = selected? ? nil : @corporation
+        #    store(:selected_corporation, selected_corporation)
+        #  end
 
-          if can_assign_corporation?
-            company = @selected_company
-            target = @corporation
-            store(:selected_corporation, nil, skip: true)
-            store(:selected_company, nil, skip: true)
-            process_action(Engine::Action::Assign.new(company, target: target))
-          end
-        end
+        #  if can_assign_corporation?
+        #    company = @selected_company
+        #    target = @corporation
+        #    store(:selected_corporation, nil, skip: true)
+        #    store(:selected_company, nil, skip: true)
+        #    process_action(Engine::Action::Assign.new(company, target: target))
+        #  end
+        #end
 
         card_style = {
           cursor: 'pointer',
@@ -148,7 +148,7 @@ module View
                         @game.status_array(@corporation).map { |text, klass| h("div.#{klass}", item_props, text) })
         end
 
-        h('div.corp.card', { style: card_style, on: { click: select_corporation } }, children)
+        h('div.corp.card', { style: card_style }, children)
       end
 
       def render_title

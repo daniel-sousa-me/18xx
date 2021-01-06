@@ -10,7 +10,6 @@ module View
     module Round
       class Merger < Snabberb::Component
         include Actionable
-        needs :selected_corporation, default: nil, store: true
         needs :show_other_players, default: nil, store: true
 
         def render
@@ -28,7 +27,6 @@ module View
             player_corps = mergeable_entities.select do |target|
               target.owner == merge_entity.owner || @step.show_other_players
             end
-            @selected_corporation = player_corps.first if player_corps.one? && !@selected_corporation
           end
 
           children = []
@@ -53,7 +51,6 @@ module View
           corps_actionable = (%w[assign merge] & actions).any?
           buttons << render_offer(entity, auctioning_corporation) if actions.include?('assign')
 
-          buttons << render_merge(entity) if actions.include?('merge')
           children << h(:div, buttons) if buttons.any?
 
           props = {
@@ -91,9 +88,9 @@ module View
 
             hidden_corps = false
             mergeable_entities.each do |target|
-              corp = @selected_corporation if corps_actionable
               if @step.show_other_players || @show_other_players || target.owner == merge_entity.owner || !target.owner
-                children << h(Corporation, corporation: target, selected_corporation: corp)
+                children << h(Corporation, corporation: target)
+                children << render_merge(entity, target) if actions.include?('merge')
               else
                 hidden_corps = true
               end
@@ -161,34 +158,29 @@ module View
           )
         end
 
-        def render_merge(corporation)
+        def render_merge(corporation, target)
           merge = lambda do
-            if @selected_corporation
-              merge_corporation = @selected_corporation
-              do_merge = lambda do
-                if merge_corporation.corporation?
-                  process_action(Engine::Action::Merge.new(
-                   corporation,
-                   corporation: merge_corporation,
-                 ))
-                else
-                  process_action(Engine::Action::Merge.new(
-                   corporation,
-                   minor: merge_corporation,
-                 ))
-                end
-              end
-
-              if @step.show_other_players ||
-                !merge_corporation.owner ||
-                merge_corporation.owner == corporation.owner
-                do_merge.call
+            merge_corporation = target
+            do_merge = lambda do
+              if merge_corporation.corporation?
+                process_action(Engine::Action::Merge.new(
+                 corporation,
+                 corporation: merge_corporation,
+               ))
               else
-                check_consent(merge_corporation.owner, do_merge)
+                process_action(Engine::Action::Merge.new(
+                 corporation,
+                 minor: merge_corporation,
+               ))
               end
+            end
 
+            if @step.show_other_players ||
+              !merge_corporation.owner ||
+              merge_corporation.owner == corporation.owner
+              do_merge.call
             else
-              store(:flash_opts, 'Select a corporation to merge with')
+              check_consent(merge_corporation.owner, do_merge)
             end
           end
 
