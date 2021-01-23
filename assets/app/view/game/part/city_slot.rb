@@ -55,6 +55,7 @@ module View
           end
 
           children << h(:circle, attrs: { r: @radius, fill: color })
+          children << h(:circle, attrs: { r: radius, fill: color }) if radius != @radius
           children << reservation if @reservation && !@token
           children << h(Token, token: @token, radius: radius) if @token
 
