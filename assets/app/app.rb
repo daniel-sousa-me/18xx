@@ -29,6 +29,7 @@ class App < Snabberb::Component
   needs :pin, default: nil
   needs :title, default: nil
   needs :production, default: nil
+  needs :vapid_public_key, default: nil, store: true
 
   def render
     store(:user, Lib::Storage['user'], skip: true) unless @user

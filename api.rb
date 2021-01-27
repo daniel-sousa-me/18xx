@@ -130,6 +130,7 @@ class Api < Roda
 
   def render(titles: nil, **needs)
     needs[:user] = user&.to_h(for_user: true)
+    needs[:vapid_public_key] = ENV['VAPID_PUBLIC_KEY']
 
     return render_pin(**needs) if needs[:pin]
 

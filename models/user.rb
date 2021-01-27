@@ -16,7 +16,7 @@ class User < Base
       "r#{index}_#{prop}"
     end
   end + %w[
-    consent notifications red_logo bg font bg2 font2 your_turn hotseat_game
+    consent notifications red_logo bg font bg2 font2 your_turn hotseat_game webpush_subscriptions
     white yellow green brown gray red blue
   ]).freeze
 

@@ -17,6 +17,7 @@ gem 'sequel-pg_advisory_lock'
 gem 'snabberb'
 gem 'unicorn'
 gem 'unicorn-worker-killer'
+gem 'webpush'
 
 group :development do
   gem 'pry-byebug'
