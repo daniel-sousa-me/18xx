@@ -289,7 +289,7 @@ module Engine
         shares = []
 
         @_shares.each do |_, share|
-          shares << share if share.corporation == corporation && share.percent.negative?
+          shares << share if share.corporation == corporation && share.percent.negative? && share.owner.player?
         end
 
         shares
