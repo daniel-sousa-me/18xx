@@ -46,7 +46,7 @@ module View
             next
           end
           children = [h(Company, company: company)]
-          children << render_input if @selected_company == company
+          children << render_input(company)
           h(:div, props, children)
         end
 
@@ -70,13 +70,13 @@ module View
         companies_to_buy.compact
       end
 
-      def render_input
-        max_price = max_purchase_price(@corporation, @selected_company)
+      def render_input(company)
+        max_price = max_purchase_price(@corporation, company)
 
-        h(BuyValueInput, value: max_price, min_value: @selected_company.min_price,
+        h(BuyValueInput, value: max_price, min_value: company.min_price,
                          max_value: max_price,
                          size: @corporation.cash.to_s.size,
-                         selected_entity: @selected_company)
+                         selected_entity: company)
       end
 
       def max_purchase_price(corporation, company)
