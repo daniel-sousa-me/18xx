@@ -123,7 +123,7 @@ module View
           }
 
           children = [h(Company, company: company, bids: @step.bids[company])]
-          children << render_input(company) if @selected_company == company
+          children << render_input(company)
           h(:div, props, children)
         end
 
@@ -140,7 +140,7 @@ module View
         def render_company_actions(company)
           return [] if @step.auctioneer? && @step.max_bid(@current_entity, company) < @step.min_bid(company)
           return [h(:button, { on: { click: -> { buy(company) } } }, 'Buy')] if @step.may_purchase?(company)
-          return [h(:button, { on: { click: -> { choose } } }, 'Choose')] if @step.may_choose?(company)
+          return [h(:button, { on: { click: -> { choose(company) } } }, 'Choose')] if @step.may_choose?(company)
 
           input = h(:input, style: { marginRight: '1rem' }, props: {
                       value: @step.min_bid(company),
@@ -211,7 +211,7 @@ module View
 
           @step.available.select(&:minor?).map do |minor|
             children = [h(Corporation, corporation: minor)]
-            children << render_minor_choose_input(minor) if @selected_corporation == minor
+            children << render_minor_choose_input(minor)
             h(:div, props, children)
           end
         end
@@ -244,22 +244,25 @@ module View
 
           @step.available.select(&:corporation?).map do |corporation|
             children = []
-            children << h(Corporation, corporation: corporation)
-            children << render_ipo_input if @selected_corporation == corporation && !corporation.ipoed
-            children << render_corp_choose_input if @selected_corporation == corporation && corporation.ipoed
+            children << h(Corporation, corporation: corporation, bids: @step.bids[corporation])
+            children << if corporation.ipoed
+                          render_corp_choose_input(corporation)
+                        else
+                          render_ipo_input(corporation)
+                        end
             h(:div, props, children)
           end.compact
         end
 
-        def render_ipo_input
-          h('div.margined_bottom', { style: { width: '20rem' } }, [h(Par, corporation: @selected_corporation)])
+        def render_ipo_input(corporation)
+          h('div.margined_bottom', { style: { width: '20rem' } }, [h(Par, corporation: corporation)])
         end
 
-        def render_corp_choose_input
+        def render_corp_choose_input(corporation)
           choose = lambda do
             hide!
             process_action(Engine::Action::Bid.new(@current_entity,
-                                                   corporation: @selected_corporation,
+                                                   corporation: corporation,
                                                    price: 0))
             store(:selected_corporation, nil, skip: true)
           end
@@ -301,12 +304,12 @@ module View
           process_action(Engine::Action::Assign.new(@current_entity, target: company))
         end
 
-        def choose
+        def choose(company)
           hide!
           process_action(Engine::Action::Bid.new(
             @current_entity,
-            company: @selected_company,
-            price: @selected_company.value
+            company: company,
+            price: company.value
           ))
           store(:selected_company, nil, skip: true)
         end
