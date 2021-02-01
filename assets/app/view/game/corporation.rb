@@ -8,6 +8,7 @@ require 'view/game/alternate_corporations'
 
 module View
   module Game
+    # TODO: Make a class with the common things between Corporation, Company and Player
     class Corporation < Snabberb::Component
       include Actionable
       include Lib::Color
@@ -16,6 +17,7 @@ module View
 
       needs :user, default: nil, store: true
       needs :corporation
+      needs :bids, default: nil
       needs :selected_company, default: nil, store: true
       needs :selected_corporation, default: nil, store: true
       needs :game, store: true
@@ -96,6 +98,12 @@ module View
         if @game.respond_to?(:available_shorts) && @game.available_shorts(@corporation)[0].positive?
           extras << render_shorts
         end
+
+        if @bids&.any?
+          extras << h(:div, { style: { fontWeight: 'normal', margin: '0 0.5rem' } }, 'Bidders:')
+          extras << render_bidders
+        end
+
         if extras.any?
           props = { style: { borderCollapse: 'collapse' } }
           children << h('table.center', props, [h(:tbody, extras)])
@@ -633,6 +641,21 @@ module View
           },
         }
         h('div', outer_props, [h('div', inner_props, minor_logos)])
+      end
+
+      def render_bidders
+        bidders_style = {
+          fontWeight: 'normal',
+          margin: '0 0.5rem',
+        }
+        names = @bids
+          .sort_by(&:price)
+          .reverse.each_with_index.map do |bid, i|
+            props = { style: { padding: '1rem' } }
+            props[:style][:fontWeight] = 'bold' if i.zero?
+            h(:div, props, "#{bid.entity.name} (#{@game.format_currency(bid.price)})")
+          end
+        h(:div, { style: bidders_style }, names)
       end
 
       def selected?
