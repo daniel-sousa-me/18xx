@@ -137,7 +137,7 @@ module View
             choose = h(Choose) if @current_actions.include?('choose') && @step.choice_available?(corporation)
 
             children << h(Corporation, corporation: corporation, interactive: input || choose || merging)
-            children << input if input && @selected_corporation == corporation
+            children << input if input
             children << choose if choose
 
             h(:div, props, children)
@@ -265,7 +265,7 @@ module View
             children = []
             children << h(Company, company: company)
             children << h('div.margined_bottom', { style: { width: '20rem' } },
-                          render_sell_input(company)) if @selected_company == company
+                          render_sell_input(company))
             h(:div, props, children)
           end
         end
