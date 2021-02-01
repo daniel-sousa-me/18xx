@@ -39,7 +39,7 @@ module View
             next
           end
           children = [h(Company, company: company)]
-          children << render_input if @selected_company == company
+          children << render_input
           h(:div, props, children)
         end
 

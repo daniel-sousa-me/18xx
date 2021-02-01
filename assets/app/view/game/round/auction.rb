@@ -123,7 +123,7 @@ module View
           }
 
           children = [h(Company, company: company, bids: @step.bids[company])]
-          children << render_input(company) if @selected_company == company
+          children << render_input(company)
           h(:div, props, children)
         end
 
@@ -211,7 +211,7 @@ module View
 
           @step.available.select(&:minor?).map do |minor|
             children = [h(Corporation, corporation: minor)]
-            children << render_minor_choose_input(minor) if @selected_corporation == minor
+            children << render_minor_choose_input(minor)
             h(:div, props, children)
           end
         end
@@ -245,8 +245,8 @@ module View
           @step.available.select(&:corporation?).map do |corporation|
             children = []
             children << h(Corporation, corporation: corporation)
-            children << render_ipo_input if @selected_corporation == corporation && !corporation.ipoed
-            children << render_corp_choose_input if @selected_corporation == corporation && corporation.ipoed
+            children << render_ipo_input if !corporation.ipoed
+            children << render_corp_choose_input if corporation.ipoed
             h(:div, props, children)
           end.compact
         end
