@@ -134,7 +134,7 @@ module View
             actions << h(:button, { on: { click: -> { assign(company) } } }, 'Reduce Price')
           end
 
-          h(:div, { style: { textAlign: 'center', margin: '1rem' } }, actions)
+          h(:div, { style: { textAlign: 'center', margin: '1rem', width: '20rem' } }, actions)
         end
 
         def render_company_actions(company)
@@ -227,7 +227,7 @@ module View
 
           minor_actions = [h(:button, { on: { click: choose } }, 'Choose')]
 
-          h(:div, { style: { textAlign: 'center', margin: '1rem' } }, minor_actions)
+          h(:div, { style: { textAlign: 'center', margin: '1rem', width: '20rem' } }, minor_actions)
         end
 
         def render_corporations
@@ -269,7 +269,7 @@ module View
 
           corp_actions = [h(:button, { on: { click: choose } }, 'Choose')]
 
-          h(:div, { style: { textAlign: 'center', margin: '1rem' } }, corp_actions)
+          h(:div, { style: { textAlign: 'center', margin: '1rem', width: '20rem' } }, corp_actions)
         end
 
         def hide!
