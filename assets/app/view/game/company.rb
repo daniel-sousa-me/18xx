@@ -39,8 +39,11 @@ module View
         }
         names = @bids
           .sort_by(&:price)
-          .reverse.map { |bid| "#{bid.entity.name} (#{@game.format_currency(bid.price)})" }
-          .join(', ')
+          .reverse.each_with_index.map do |bid, i|
+            props = { style: { padding: '1rem' } }
+            props[:fontWeight] = 'bold' if i.zero?
+            h(:div, props, "#{bid.entity.name} (#{@game.format_currency(bid.price)})")
+          end
         h(:div, { style: bidders_style }, names)
       end
 
