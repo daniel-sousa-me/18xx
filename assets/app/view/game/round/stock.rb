@@ -146,7 +146,7 @@ module View
             choose = h(Choose) if @current_actions.include?('choose') && @step.choice_available?(corporation)
 
             children << h(Corporation, corporation: corporation, interactive: input || choose || merging)
-            children << input if input && @selected_corporation == corporation
+            children << input if input
             children << choose if choose
 
             h(:div, props, children)
@@ -263,7 +263,7 @@ module View
             children = []
             children << h(Company, company: company)
             children << h('div.margined_bottom', { style: { width: '20rem' } },
-                          render_sell_input(company)) if @selected_company == company
+                          render_sell_input(company))
             h(:div, props, children)
           end
         end
@@ -281,7 +281,7 @@ module View
 
           [h(:button,
              { on: { click: buy } },
-             "Sell #{@selected_company.sym} to Bank for #{@game.format_currency(price)}")]
+             "Sell #{company.sym} to Bank for #{@game.format_currency(price)}")]
         end
 
         def render_bank_companies
@@ -296,12 +296,10 @@ module View
             children = []
             children << h(Company, company: company,
                                    bids: (@current_actions.include?('bid') ? @step.bids[company] : nil))
-            if @selected_company == company
-              inputs = []
-              inputs.concat(render_buy_input(company)) if @current_actions.include?('buy_company')
-              inputs.concat(render_bid_input(company)) if @current_actions.include?('bid')
-              children << h('div.margined_bottom', { style: { width: '20rem' } }, inputs)
-            end
+            inputs = []
+            inputs.concat(render_buy_input(company)) if @current_actions.include?('buy_company')
+            inputs.concat(render_bid_input(company)) if @current_actions.include?('bid')
+            children << h('div.margined_bottom', { style: { width: '20rem' } }, inputs)
             h(:div, props, children)
           end
         end
@@ -320,7 +318,7 @@ module View
           end
           [h(:button,
              { on: { click: buy } },
-             "Buy #{@selected_company.sym} from Bank for #{@game.format_currency(company.value)}")]
+             "Buy #{company.sym} from Bank for #{@game.format_currency(company.value)}")]
         end
 
         def render_buy_input_interval(company)
@@ -348,7 +346,7 @@ module View
 
           div_class = buy_buttons.size < 5 ? '.inline' : ''
           [h(:div, [
-            h("div#{div_class}", { style: { marginTop: '0.5rem' } }, "Buy #{@selected_company.sym}: "),
+            h("div#{div_class}", { style: { marginTop: '0.5rem' } }, "Buy #{company.sym}: "),
             *buy_buttons,
           ])]
         end
