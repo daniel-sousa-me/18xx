@@ -39,7 +39,7 @@ module View
             next
           end
           children = [h(Company, company: company)]
-          children << render_input if @selected_company == company
+          children << render_input(company)
           h(:div, props, children)
         end
 
@@ -63,12 +63,12 @@ module View
         companies_to_buy.compact
       end
 
-      def render_input
-        max_price = max_purchase_price(@corporation, @selected_company)
+      def render_input(company)
+        max_price = max_purchase_price(@corporation, company)
         input = h(:input, style: { marginRight: '1rem' }, props: {
                     value: max_price,
                     type: 'number',
-                    min: @selected_company.min_price,
+                    min: company.min_price,
                     max: max_price,
                     size: @corporation.cash.to_s.size,
                   })
@@ -78,16 +78,16 @@ module View
           buy = lambda do
             process_action(Engine::Action::BuyCompany.new(
               @corporation,
-              company: @selected_company,
+              company: company,
               price: price,
             ))
             store(:selected_company, nil, skip: true)
           end
 
-          if !@selected_company.owner || @selected_company.owner == @corporation.owner
+          if !company.owner || company.owner == @corporation.owner
             buy.call
           else
-            check_consent(@selected_company.owner, buy)
+            check_consent(company.owner, buy)
           end
         end
 
