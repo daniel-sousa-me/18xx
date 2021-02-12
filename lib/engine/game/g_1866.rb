@@ -26,7 +26,7 @@ module Engine
 
       EVENTS_TEXT = Base::EVENTS_TEXT.merge(
         'ce' => ['La crisis económica de 1866',
-                  'All companies go back on the market diagonaly (down and left) the same amount of steps as shares unsold (either on the Corporation treasury or the Bank pool).']
+                  'All companies go back on the market diagonaly (left and then down if possible) the same amount of steps as shares unsold (either on the Corporation treasury or the Bank pool).']
       ).freeze
 
       CE_POSSIBLE_PHASES = %w[3 4 5]
