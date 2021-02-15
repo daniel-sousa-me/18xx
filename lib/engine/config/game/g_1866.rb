@@ -86,6 +86,7 @@ module Engine
     "448": 1,
     "449": 2,
     "450": 2,
+    "619": 2,
     "627": 1,
     "628": 1,
     "630": 1,
@@ -612,9 +613,6 @@ module Engine
     "red": {
       "offboard=revenue:yellow_30|brown_50;path=a:5,b:_0": [
         "C1"
-      ],
-      "offboard=revenue:yellow_20|brown_40,visit_cost:0;path=a:0,b:_0": [
-        "F2"
       ],
       "offboard=revenue:yellow_30|brown_80;path=a:5,b:_0": [
         "K3"

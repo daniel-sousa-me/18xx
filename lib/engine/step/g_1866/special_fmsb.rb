@@ -7,7 +7,7 @@ require_relative '../tokener'
 module Engine
   module Step
     module G1866
-      class SpecialFMSB < Base
+      class SpecialFmsb < Base
         include Tracker
         include Tokener
 

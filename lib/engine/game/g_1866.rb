@@ -49,7 +49,7 @@ module Engine
           Step::Exchange,
           #Step::SpecialTrack,
           Step::BuyCompany,
-          Step::G1866::SpecialFMSB,
+          Step::G1866::SpecialFmsb,
           Step::HomeToken,
           Step::Track,
           Step::Token,
