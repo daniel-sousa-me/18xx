@@ -220,7 +220,7 @@ module View
             weights += EXTRA_SLOT_REGIONS[@edge] unless @city.slots(all: true) == 1
             distance = 50
             # Hack
-            distance -= 15 if @city.slots(all: true) == 4
+            distance -= 15 if @city.slots(all: true) == 2
             # move in if city is on a "half" edge and has more that one slot
             distance -= 8 if @edge.to_i != @edge && @city.slots(all: true) > 1
 
