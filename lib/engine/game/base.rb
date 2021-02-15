@@ -2141,6 +2141,7 @@ module Engine
 
       def stock_round
         Round::Stock.new(self, [
+          Step::HomeToken,
           Step::DiscardTrain,
           Step::Exchange,
           Step::SpecialTrack,
@@ -2160,6 +2161,7 @@ module Engine
           Step::Exchange,
           Step::SpecialTrack,
           Step::BuyCompany,
+          Step::HomeToken,
           Step::Track,
           Step::Token,
           Step::Route,

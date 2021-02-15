@@ -8,13 +8,13 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   sodipodi:docname="TBF.svg"
+   sodipodi:docname="mine.svg"
    inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
    id="svg8"
    version="1.1"
-   viewBox="0 0 15.723368 15.723368"
-   height="15.723369mm"
-   width="15.723369mm"
+   viewBox="0 0 15.96163 15.96163"
+   height="15.961631mm"
+   width="15.961631mm"
    inkscape:export-filename="C:\Users\import\Desktop\Board Games\1866 (18PC)\01. ficheros para TTS\18PC_map_v2.png"
    inkscape:export-xdpi="150"
    inkscape:export-ydpi="150">
@@ -1805,9 +1805,9 @@
      inkscape:document-rotation="0"
      inkscape:current-layer="svg8"
      inkscape:document-units="mm"
-     inkscape:cy="259.50253"
-     inkscape:cx="-24.362234"
-     inkscape:zoom="2.1824339"
+     inkscape:cy="924.5602"
+     inkscape:cx="-377.63046"
+     inkscape:zoom="0.1351939"
      inkscape:pageshadow="2"
      inkscape:pageopacity="1"
      borderopacity="1"
@@ -1830,7 +1830,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -1839,74 +1839,52 @@
      inkscape:label="Tokens"
      id="layer15"
      inkscape:groupmode="layer"
-     transform="translate(-1087.0564,-22.531484)">
+     transform="translate(-1117.4382,21.926358)">
     <g
-       transform="matrix(0.80558969,0,0,0.80558969,211.33496,6.0951344)"
-       inkscape:export-ydpi="150"
+       id="g3536"
+       inkscape:export-filename="C:\Users\import\Desktop\Board Games\1848\01. ficheros para TTS\Tokens\18PC_Token_TBF_back.png"
        inkscape:export-xdpi="150"
-       inkscape:export-filename="C:\Users\import\Desktop\Board Games\1848\01. ficheros para TTS\Tokens\18PC_Token_TBF.png"
-       id="g6422">
-      <circle
-         style="display:inline;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         id="circle2469-2-6-1-8"
-         cx="1096.8153"
-         cy="30.161798"
-         r="9.2589188" />
-      <g
-         transform="matrix(0.3867755,0,0,0.3867755,749.78465,76.991185)"
-         style="display:inline;stroke:none;stroke-width:0.798926;stroke-miterlimit:4;stroke-dasharray:none"
-         id="g3257-6">
-        <circle
-           r="19.562805"
-           cy="-120.73972"
-           cx="897.43536"
-           id="path3165-3"
-           style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.798926;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-        <g
-           transform="matrix(0.97001209,0,0,0.97001209,26.622952,-3.6240216)"
-           clip-path="url(#clipPath3246-9-2)"
-           id="g3229-8"
-           style="stroke:none;stroke-width:0.823624;stroke-miterlimit:4;stroke-dasharray:none">
-          <circle
-             r="19.562805"
-             cy="-120.8494"
-             cx="897.27753"
-             id="path3165-5-0"
-             style="display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.823624;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-          <g
-             id="g1902-0-9"
-             transform="matrix(0.1370375,0,0,0.1370375,825.85751,-145.18319)"
-             clip-path="url(#clip0-18-6-2-0-3-8)"
-             style="display:inline;stroke:none;stroke-width:6.01021;stroke-miterlimit:4;stroke-dasharray:none">
-            <g
-               id="g1900-5-1"
-               transform="matrix(1.04987e-4,0,0,1.04987e-4,369,89)"
-               clip-path="url(#clip1-7-6-1-0-4-1)"
-               style="stroke:none;stroke-width:57247.2;stroke-miterlimit:4;stroke-dasharray:none">
-              <g
-                 id="g1898-1-1"
-                 transform="matrix(1,0,0,1.00191,-0.25,-0.0625)"
-                 clip-path="url(#clip3-9-0-6-4-3-8)"
-                 style="stroke:none;stroke-width:57192.6;stroke-miterlimit:4;stroke-dasharray:none">
-                <use
-                   id="use1896-1-7"
-                   transform="scale(12700)"
-                   xlink:href="#img2-39"
-                   height="100%"
-                   width="100%"
-                   x="0"
-                   y="0"
-                   style="stroke:none;stroke-width:4.50336;stroke-miterlimit:4;stroke-dasharray:none" />
-              </g>
-            </g>
-          </g>
-        </g>
-      </g>
-    </g>
+       inkscape:export-ydpi="150" />
     <g
        inkscape:export-ydpi="150"
        inkscape:export-xdpi="150"
        inkscape:export-filename="C:\Users\import\Desktop\Board Games\1866 (18PC)\01. ficheros para TTS\Tokens\Mine token.png"
-       id="g6410" />
+       id="g6410">
+      <g
+         id="g5908"
+         transform="translate(-5.1530382,0.51530382)"
+         inkscape:export-filename="C:\Users\import\Desktop\Board Games\1866 (18PC)\01. ficheros para TTS\Tokens\Mine token.png"
+         inkscape:export-xdpi="150"
+         inkscape:export-ydpi="150">
+        <circle
+           style="display:inline;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.817797;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="circle2469-2-6-1-7-8"
+           cx="1130.572"
+           cy="-14.460846"
+           r="7.5719171" />
+        <path
+           id="path5889"
+           d="m 1127.0678,-10.693343 6.0578,-6.215834 v 0"
+           style="fill:none;stroke:#000000;stroke-width:1.1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+        <path
+           sodipodi:nodetypes="csssccsssc"
+           inkscape:original-d="m 1128.3847,-18.647504 c -0.9309,-0.210971 2.599,-0.06997 3.898,-0.105353 1.2992,-0.03538 1.089,0.667501 1.633,1.000855 0.5441,0.333353 0.7056,1.252857 1.0741,1.814476 0.3684,0.561619 0.032,1.557088 0.032,2.399649 0.012,0.572338 -0.7459,1.709205 -0.3311,1.218631 0,-0.03538 -0.3011,-1.727573 -0.4594,-2.746252 -0.1583,-1.018678 -0.7372,-1.228854 -1.1062,-1.843679 -0.369,-0.614824 -1.2991,-0.737207 -1.949,-1.106208 -0.65,-0.369001 -2.7916,-0.632119 -2.7916,-0.632119"
+           inkscape:path-effect="#path-effect5903"
+           id="path5901"
+           d="m 1128.3847,-18.647504 c 1.2243,-0.521955 2.6473,-0.560413 3.898,-0.105353 0.6044,0.21991 1.1713,0.553093 1.633,1.000855 0.5106,0.495165 0.8866,1.128347 1.0741,1.814476 0.2127,0.778402 0.1825,1.606878 0.032,2.399649 -0.079,0.413967 -0.1894,0.821813 -0.3311,1.218631 0.01,-0.932921 -0.1463,-1.867398 -0.4594,-2.746252 -0.2427,-0.681115 -0.5874,-1.340016 -1.1062,-1.843679 -0.5402,-0.524435 -1.2398,-0.853575 -1.949,-1.106208 -0.9009,-0.320914 -1.8403,-0.533629 -2.7916,-0.632119"
+           style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1" />
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-size:14.1111px;line-height:6.61458px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.264583"
+         x="1126.5511"
+         y="-8.7350264"
+         id="text6402"><tspan
+           sodipodi:role="line"
+           id="tspan6400"
+           x="1126.5511"
+           y="-8.7350264"
+           style="font-size:2.82222px;stroke-width:0.264583">+20</tspan></text>
+    </g>
   </g>
 </svg>

@@ -74,9 +74,15 @@ module Engine
     "47": 1,
     "56": 1,
     "57": 5,
+    "58": 1,
     "70": 1,
     "129": 1,
     "130": 1,
+    "432": {
+      "count": 1,
+      "color": "brown",
+      "code": "city=revenue:40;city=revenue:40;path=a:0,b:_0;path=a:1,b:_0;path=a:2,b:_0;path=a:3,b:_1;path=a:4,b:_1;path=a:5,b:_1;path=a:_0,b:_1;label=C"
+    },
     "448": 1,
     "449": 2,
     "450": 2,
@@ -222,7 +228,7 @@ module Engine
       "name": "Companyia dels Camins de Ferro de Barcelona a Mataró",
       "value": 20,
       "revenue": 5,
-      "desc": "I11 while owned by a player.",
+      "desc": "Blocks I11 while owned by a player.",
       "sym": "FBM",
       "abilities": [
         {
@@ -238,7 +244,7 @@ module Engine
       "name": "Companyia dels Ferrocarrils de Tarragona a Barcelona i França",
       "value": 50,
       "revenue": 10,
-      "desc": "Allows the owner of the private to open TBF, only when both BFF and TMB are connected by rail. TBF may only be opened by the owner of the private. If this private is sold to a Corporation TBF may no longer open.",
+      "desc": "Allows the owner of the private to open TBF. TBF may only be opened by the owner of this private. TBF can't be opened unless TMB and BFF are connected. If this private is sold to a Corporation TBF may no longer open.",
       "sym": "TBF",
       "abilities": [
         {
@@ -253,7 +259,7 @@ module Engine
       "name": "Companyia dels Ferrocarrils de Tarragona a Barcelona i França",
       "value": 100,
       "revenue": 10,
-      "desc": "When bought by a Corporation allows it´s lower train to never rust. Train limit still applies.",
+      "desc": "When bought by a Corporation allows its lowest rank train to never rust. Train limit still applies.",
       "sym": "MTM",
       "abilities": [
         {
@@ -277,6 +283,40 @@ module Engine
           "hexes": [
             "A11"
           ]
+        },
+        {
+          "type": "tile_lay",
+          "owner_type":"corporation",
+          "special": false,
+          "hexes": [],
+          "teleport": true,
+          "tiles": [
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "43",
+            "44",
+            "45",
+            "46",
+            "47",
+            "70",
+            "129",
+            "130",
+            "432",
+            "448",
+            "449",
+            "450",
+            "627",
+            "628"
+          ],
+          "when": ["special_track", "owning_corp_or_turn"],
+          "count": 2
         }
       ]
     },
@@ -291,6 +331,12 @@ module Engine
           "type": "shares",
           "shares": "CFSB_0"
         },
+       	{
+					"type": "close",
+					"when": "bought_train",
+					"corporation": "CFSB"
+				},
+
         {
           "type": "no_buy"
         }
@@ -332,13 +378,13 @@ module Engine
         40
       ],
       "coordinates": "B10",
-      "color": "white"
+      "color": "lightgray"
     },
     {
       "float_percent": 50,
       "sym": "CGFC",
       "name": "CGFC",
-      "logo": "1866/KO",
+      "logo": "1866/CGFC",
       "tokens": [
         0,
         40
@@ -356,7 +402,6 @@ module Engine
         40,
         40
       ],
-			"city": 2,
       "coordinates": "H12",
       "color": "gray"
     },
@@ -382,7 +427,7 @@ module Engine
         40,
         80
       ],
-      "color": "red"
+      "color": "black"
     }
   ],
   "trains": [
@@ -485,7 +530,9 @@ module Engine
       ],
       "town=revenue:0;upgrade=cost:40,terrain:mountain": [
         "G3",
-        "L4",
+        "L4"
+      ],
+      "town=revenue:0;upgrade=cost:40,terrain:mountain;icon=image:1866/mine,sticky:1": [
         "I5"
       ],
       "town=revenue:0;town=revenue:0": [
@@ -495,7 +542,7 @@ module Engine
       "town=revenue:0;town=revenue:0;upgrade=cost:40,terrain:mountain": [
         "G11"
       ],
-      "town=revenue:0;town=revenue:0;upgrade=cost:40,terrain:mountain;border=edge:1": [
+      "town=revenue:0;town=revenue:0;upgrade=cost:40,terrain:mountain;border=edge:1,type:water,cost:20": [
         "F4"
       ],
       "border=edge:2,type:water,cost:20": [
@@ -547,7 +594,7 @@ module Engine
       ]
     },
     "yellow": {
-      "city=revenue:30,loc:1.5;city=revenue:30,loc:4.5;city=revenue:30,loc:3;path=a:2,b:_0;path=a:4,b:_1;label=C": [
+      "city=revenue:30;city=revenue:30;path=a:2,b:_0;path=a:4,b:_1;label=C": [
         "H12"
       ]
     },
