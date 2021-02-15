@@ -16,7 +16,7 @@ module Engine
 
       load_from_json(Config::Game::G1866::JSON)
 
-      DEV_STAGE = :alpha
+      DEV_STAGE = :unique
 
       GAME_LOCATION = 'Catalunya'
       GAME_RULES_URL = ''

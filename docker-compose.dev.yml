@@ -19,7 +19,7 @@ services:
   rack:
     <<: *rack
     ports:
-      - 9292:9292
+      - 9266:9292
 
   queue:
     <<: *rack
