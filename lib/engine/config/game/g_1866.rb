@@ -633,6 +633,11 @@ module Engine
       "offboard=revenue:30;path=a:2,b:_0": [
         "I13"
       ]
+    },
+    "brown": {
+      "offboard=revenue:yellow_20|brown_40,visit_cost:0;path=a:0,b:_0;icon=image:1866/coins": [
+        "F2"
+      ]
     }
   },
   "phases": [
