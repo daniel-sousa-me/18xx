@@ -81,7 +81,7 @@ module Engine
     "432": {
       "count": 1,
       "color": "brown",
-      "code": "city=revenue:40;city=revenue:40;path=a:0,b:_0;path=a:1,b:_0;path=a:2,b:_0;path=a:3,b:_1;path=a:4,b:_1;path=a:5,b:_1;path=a:_0,b:_1;label=C"
+      "code": "city=revenue:40,slots:2,loc:1;city=revenue:40,slots:2,loc:4;path=a:0,b:_0;path=a:1,b:_0;path=a:2,b:_0;path=a:3,b:_1;path=a:4,b:_1;path=a:5,b:_1;path=a:_0,b:_1;label=C"
     },
     "448": 1,
     "449": 2,
