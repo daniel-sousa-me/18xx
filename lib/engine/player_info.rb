@@ -27,7 +27,8 @@ module Engine
         turn: @turn,
         round_no: @round_no,
         value: @value,
-        action: @action_id,
+        action_id: @action_id,
       }
+    end
   end
 end

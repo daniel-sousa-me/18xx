@@ -79,7 +79,7 @@ module Engine
       include Game::Meta
 
       attr_reader :raw_actions, :actions, :bank, :cert_limit, :cities, :companies, :corporations,
-                  :depot, :finished, :graph, :hexes, :id, :loading, :loans, :log, :minors,
+                  :depot, :finished, :graph, :hexes, :id, :loading, :loans, :log, :phases, :minors,
                   :phase, :players, :operating_rounds, :round, :share_pool, :stock_market, :tile_groups,
                   :tiles, :turn, :total_loans, :undo_possible, :redo_possible, :round_history, :all_tiles,
                   :optional_rules, :exception, :last_processed_action, :broken_action,
@@ -428,6 +428,7 @@ module Engine
         @strict = strict
         @finished = false
         @log = Engine::GameLog.new(self)
+        @phases = []
         @queued_log = []
         @actions = []
         @raw_actions = []
@@ -1326,13 +1327,17 @@ module Engine
                 "#{ability.owner.name}"
       end
 
+      def log_phase(name)
+        @phases << { name: name, action: current_action_id }
+      end
+
       def declare_bankrupt(player)
         if player.bankrupt
           msg = "#{player.name} is already bankrupt, cannot declare bankruptcy again."
           raise GameError, msg
         end
 
-        player.bankrupt = true
+        player.bankrupt = current_action_id
         return unless self.class::CERT_LIMIT_CHANGE_ON_BANKRUPTCY
 
         # Assume that games without cert limits at lower player counts retain previous counts (1817 and 2 players)

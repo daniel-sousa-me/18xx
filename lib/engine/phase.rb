@@ -67,6 +67,7 @@ module Engine
       log_msg += "Train Limit: #{train_limit_to_s(@train_limit)}"
       log_msg += " | Available Tiles: #{@tiles.map(&:capitalize).join(', ')}"
       log_msg += ') --'
+      @game.log_phase(@name)
       @log << log_msg
       trigger_events!
     end
