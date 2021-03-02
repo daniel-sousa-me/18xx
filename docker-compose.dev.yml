@@ -15,16 +15,13 @@ x-rack: &rack
 
 services:
   rack:
-    <<: *rack
-    ports:
-      - 9292:9292
-
-  queue:
-    <<: *rack
-    command: bundle exec ruby queue.rb # bundle exec rerun --background -i 'build/*' -i 'public/*' 'ruby queue.rb'
-
-  db:
+    image: 18xx_rack:dev
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: 18xx_development
+      RACK_ENV: development
+    volumes:
+      - .:/18xx
+      - /18xx/vendor
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
