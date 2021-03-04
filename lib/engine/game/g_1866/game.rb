@@ -314,7 +314,7 @@ module Engine
 
         CORPORATIONS = [
           {
-            float_percent: 50,
+            float_percent: 60,
             sym: 'BFF',
             name: 'BFF',
             logo: '1866/BFF',
@@ -324,7 +324,7 @@ module Engine
             reservation_color: nil,
           },
           {
-            float_percent: 50,
+            float_percent: 60,
             sym: 'LRT',
             name: 'LRT',
             logo: '1866/LRT',
@@ -334,7 +334,7 @@ module Engine
             reservation_color: nil,
           },
           {
-            float_percent: 50,
+            float_percent: 60,
             sym: 'CFSB',
             name: 'CFSB',
             logo: '1866/CFSB',
@@ -344,7 +344,7 @@ module Engine
             reservation_color: nil,
           },
           {
-            float_percent: 50,
+            float_percent: 60,
             sym: 'CGFC',
             name: 'CGFC',
             logo: '1866/CGFC',
@@ -354,7 +354,7 @@ module Engine
             reservation_color: nil,
           },
           {
-            float_percent: 50,
+            float_percent: 60,
             sym: 'FSB',
             name: 'FSB',
             logo: '1866/FSB',
@@ -364,7 +364,7 @@ module Engine
             reservation_color: nil,
           },
           {
-            float_percent: 50,
+            float_percent: 60,
             sym: 'TMB',
             name: 'TMB',
             logo: '1866/TMB',
@@ -374,7 +374,7 @@ module Engine
             reservation_color: nil,
           },
           {
-            float_percent: 50,
+            float_percent: 60,
             sym: 'TBF',
             name: 'TBF',
             logo: '1866/TBF',
