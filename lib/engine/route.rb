@@ -18,6 +18,7 @@ module Engine
       @revenue = opts[:revenue]
       @revenue_str = opts[:revenue_str]
       @subsidy = opts[:subsidy]
+      @president_bonus = opts[:president_bonus]
       @halts = opts[:halts]
       @abilities = opts[:abilities]
 
@@ -33,6 +34,7 @@ module Engine
       @revenue = nil
       @revenue_str = nil
       @subsidy = nil
+      @president_bonus = nil
       @stops = nil
     end
 
@@ -278,6 +280,12 @@ module Engine
       return nil unless @game.respond_to?(:subsidy_for)
 
       @subsidy ||= @game.subsidy_for(self, stops)
+    end
+
+    def president_bonus
+      return nil unless @game.respond_to?(:president_bonus_for)
+
+      @president_bonus ||= @game.president_bonus_for(self, stops)
     end
 
     def revenue_str

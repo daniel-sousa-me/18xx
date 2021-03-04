@@ -467,7 +467,7 @@ module Engine
             ['I13'] => 'offboard=revenue:30;path=a:2,b:_0',
           },
           brown: {
-            ['F2'] => 'offboard=cheater_revenue:yellow_20|brown_40,visit_cost:0;path=a:0,b:_0;icon=image:1866/coins',
+            ['F2'] => 'offboard=revenue:yellow_20|brown_40,visit_cost:0;path=a:0,b:_0;icon=image:1866/coins',
           },
         }.freeze
 
@@ -592,8 +592,21 @@ module Engine
           super
         end
 
+        def president_bonus_for(route, stops)
+          # Andorra
+          stops.sum { |stop| stop.hex.name == 'F2' ? stop.route_revenue(route.phase, route.train) : 0 }
+        end
+
+        def routes_president_bonus(routes)
+          routes.sum(&:president_bonus)
+        end
+
+        def revenue_for(route, stops)
+          super - president_bonus_for(route, stops)
+        end
+
         def subsidy_for(_route, stops)
-          puts stops.any? { |s| s.hex.name == 'I5' } ? 20 : 0
+          # Mine
           stops.any? { |s| s.hex.name == 'I5' } ? 20 : 0
         end
 

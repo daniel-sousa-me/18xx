@@ -23,6 +23,7 @@ module Engine
             revenue: route['revenue'],
             revenue_str: route['revenue_str'],
             subsidy: route['subsidy'],
+            president_bonus: route['president_bonus'],
             halts: route['halts'],
             abilities: route['abilities'],
           }.select { |_, v| v }
@@ -48,6 +49,7 @@ module Engine
             'revenue' => route.revenue,
             'revenue_str' => route.revenue_str,
             'subsidy' => route.subsidy,
+            'president_bonus' => route.president_bonus,
             'halts' => route.halts,
             'abilities' => route.abilities,
           }.select { |_, v| v }
