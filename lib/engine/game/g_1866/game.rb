@@ -60,8 +60,9 @@ module Engine
           {
             'count' => 1,
             'color' => 'brown',
-            'code' =>
-            'city=revenue:40,slots:2,loc:1;city=revenue:40,slots:2,loc:4;path=a:0,b:_0;path=a:1,b:_0;path=a:2,b:_0;path=a:3,b:_1;path=a:4,b:_1;path=a:5,b:_1;path=a:_0,b:_1;label=C',
+            'code' => 'city=revenue:40,slots:2,loc:1;city=revenue:40,slots:2,loc:4;'\
+                      'path=a:0,b:_0;path=a:1,b:_0;path=a:2,b:_0;path=a:3,b:_1;'\
+                      'path=a:4,b:_1;path=a:5,b:_1;path=a:_0,b:_1;label=C',
           },
           '448' => 1,
           '449' => 2,
@@ -237,7 +238,9 @@ module Engine
             name: 'Companyia dels Ferrocarrils de Tarragona a Barcelona i França',
             value: 50,
             revenue: 10,
-            desc: "Allows the owner of the private to open TBF. TBF may only be opened by the owner of this private. TBF can't be opened unless TMB and BFF are connected. If this private is sold to a Corporation TBF may no longer open.",
+            desc: 'Allows the owner of the private to open TBF. TBF may only be opened by'\
+                  "the owner of this private. TBF can't be opened unless TMB and BFF are connected."\
+                  'If this private is sold to a Corporation TBF may no longer open.',
             sym: 'TBF',
             abilities: [
               {
@@ -262,9 +265,15 @@ module Engine
             name: 'Companyia dels Ferrocarrils Directes de Madrid i Saragossa a Barcelona',
             value: 140,
             revenue: 0,
-            desc: 'Only the Corporation owning this private may use the revenue from the offboard Madrid until the privates close. The owning Corporation may also upgrade 1 tile and subsquently place 1 token on a free space on that tile if available (no track conection needed and this upgrade is in addition to its normal OR actions)',
+            desc: 'No corporation may use the revenue from the offboard Madrid while this'\
+                  'private is bought. If owned by a corporation, it receives the brown value'\
+                  'when running a train to the offboard Madrid. The owning Corporation'\
+                  'may also upgrade 1 tile and subsquently place 1 token on a free space'\
+                  'on that tile if available (no track conection needed and this upgrade'\
+                  'is in addition to its normal OR actions)',
             sym: 'FMSB',
-            abilities: [{ type: 'blocks_hexes', hexes: ['A11'] },
+            abilities: [{ type: 'blocks_hexes', owner_type: 'player', hexes: ['A11'] },
+                        { type: 'hex_bonus', amount: 50, hexes: ['A11'] },
                         {
                           type: 'tile_lay',
                           owner_type: 'corporation',
@@ -303,7 +312,11 @@ module Engine
             name: 'Miquel Biada',
             value: 180,
             revenue: 20,
-            desc: "This private comes with the 20% president's certificate of the Companyia del Ferrocarril de Saragossa a Barcelona (CFSB). The buying player must immediately set the par price for the CFSB to any par price. This private cannot be purchased by a Corporation and closes at the start of phase 5, or when the CFSB purchases a train.",
+            desc: "This private comes with the 20% president's certificate of the Companyia"\
+                  'del Ferrocarril de Saragossa a Barcelona (CFSB). The buying player must'\
+                  'immediately set the par price for the CFSB to any par price. This private'\
+                  'cannot be purchased by a Corporation and closes at the start of phase 5,'\
+                  'or when the CFSB purchases a train.',
             sym: 'MB',
             abilities: [{ type: 'shares', shares: 'CFSB_0' },
                         { type: 'close', when: 'bought_train', corporation: 'CFSB' },
@@ -430,10 +443,10 @@ module Engine
             %w[D6 I7] => 'city=revenue:0;border=edge:5,type:water,cost:20',
             ['B10'] => 'city=revenue:0;border=edge:0,type:water,cost:20',
             ['B16'] => 'city=revenue:0;border=edge:4,type:water,cost:20',
-            ['C11'] =>
-                   'town=revenue:0;town=revenue:0;border=edge:0,type:water,cost:20;border=edge:1,type:water,cost:20;border=edge:5,type:water,cost:20',
-            ['E5'] =>
-                   'upgrade=cost:40,terrain:mountain;border=edge:0,type:water,cost:20;border=edge:4,type:water,cost:20;border=edge:5,type:water,cost:20',
+            ['C11'] => 'town=revenue:0;town=revenue:0;border=edge:0,type:water,cost:20;'\
+                       'border=edge:1,type:water,cost:20;border=edge:5,type:water,cost:20',
+            ['E5'] => 'upgrade=cost:40,terrain:mountain;border=edge:0,type:water,cost:20;'\
+                      'border=edge:4,type:water,cost:20;border=edge:5,type:water,cost:20',
           },
           yellow: { ['H12'] =>
             'city=revenue:30;city=revenue:30;path=a:2,b:_0;path=a:4,b:_1;label=C',
@@ -453,16 +466,17 @@ module Engine
             ['H14'] => 'offboard=revenue:30;path=a:3,b:_0',
             ['I13'] => 'offboard=revenue:30;path=a:2,b:_0',
           },
-          brown: { ['F2'] =>
-            'offboard=revenue:yellow_20|brown_40,visit_cost:0;path=a:0,b:_0;icon=image:1866/coins',
-   },
+          brown: {
+            ['F2'] => 'offboard=cheater_revenue:yellow_20|brown_40,visit_cost:0;path=a:0,b:_0;icon=image:1866/coins',
+          },
         }.freeze
 
         LAYOUT = :flat
 
         EVENTS_TEXT = Base::EVENTS_TEXT.merge(
           'ce' => ['La crisis económica de 1866',
-                   'All companies go back on the market diagonaly (left and then down if possible) the same amount of steps as shares unsold (either on the Corporation treasury or the Bank pool).']
+                   'All companies go back on the market diagonaly (left and then down if possible)'\
+                   'the same amount of steps as shares unsold (either on the Corporation treasury or the Bank pool).']
         ).freeze
 
         CE_POSSIBLE_PHASES = %w[3 4 5].freeze
