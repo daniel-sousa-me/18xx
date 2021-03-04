@@ -211,6 +211,7 @@ module View
 
       def president_bonus
         return unless @game.respond_to?(:routes_president_bonus)
+
         bonus = @game.routes_president_bonus(active_routes)
 
         h(:p, "The president receives a bonus of #{@game.format_currency(bonus)}") if bonus.positive?

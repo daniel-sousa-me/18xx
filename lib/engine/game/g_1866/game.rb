@@ -272,8 +272,7 @@ module Engine
                   'on that tile if available (no track conection needed and this upgrade'\
                   'is in addition to its normal OR actions)',
             sym: 'FMSB',
-            abilities: [{ type: 'blocks_hexes', owner_type: 'player', hexes: ['A11'] },
-                        { type: 'hex_bonus', amount: 50, hexes: ['A11'] },
+            abilities: [{ type: 'hex_bonus', amount: 50, hexes: ['A11'] },
                         {
                           type: 'tile_lay',
                           owner_type: 'corporation',
@@ -524,11 +523,8 @@ module Engine
         end
 
         def setup
-          # Due to SC adding an extra train this isn't quite a phase change, so the event needs to be tied to a train.
-          ce_train = CE_POSSIBLE_PHASES[rand % CE_POSSIBLE_PHASES.size]
-          @log << "La crisis económica de 1866 occurs on purchase of the first #{ce_train} train"
-          train = depot.upcoming.find { |t| t.name == ce_train }
-          train.events << { 'type' => 'ce' }
+          @crisis_trigerred = false
+          @crisis_just_trigerred = false
         end
 
         def home_token_locations(corporation)
@@ -547,16 +543,43 @@ module Engine
           @tbf_company = nil if corporation.name == 'TBF'
         end
 
-        def event_ce!
-          @log << '-- Event: La crisis económica de 1866! --'
+        def check_crisis!
+          puts @corporations.map(&:num_player_shares).inject(:+)
+          return if @crisis_trigerred || @corporations.map(&:num_player_shares).inject(:+) < 36
+
+          @log << '-- Event: La crisis económica de 1866 is here! --'
+          @crisis_trigerred = true
+          @crisis_just_trigerred = true
+
           @corporations.each do |corp|
             next unless corp.floated?
 
+            old_price = corp.share_price.price
             (corp.num_market_shares + corp.num_ipo_shares).times do
               @stock_market.move_left(corp)
               @stock_market.move_down(corp)
             end
+
+            if old_price != corp.share_price.price
+              new_price = corp.share_price.price
+              @log << "#{corp.name} falls from #{format_currency(old_price)} to #{format_currency(new_price)}"
+            end
           end
+
+          next_round!
+        end
+
+        def new_stock_round
+          if @crisis_just_trigerred
+            @crisis_just_trigerred = false
+
+            player = @players.reject(&:bankrupt).min_by(&:cash)
+            @players.rotate!(@players.index(player))
+
+            @log << "#{player.name} is the player with less cash and gets priority"
+          end
+
+          super
         end
 
         def fmsb_company
@@ -616,8 +639,7 @@ module Engine
 
         def check_other(route)
           return unless route.stops.map(&:hex).map(&:id).include?('A11')
-          return if fmsb_company.closed?
-          return if fmsb_company.owner == route.corporation
+          return unless fmsb_company.player?
 
           raise GameError, 'Only the owner of FMSB can run to Madrid'
         end

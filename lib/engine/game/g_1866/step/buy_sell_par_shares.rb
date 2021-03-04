@@ -36,6 +36,14 @@ module Engine
             else
               super
             end
+
+            @game.check_crisis!
+          end
+
+          def process_buy_shares(action)
+            super
+
+            @game.check_crisis!
           end
         end
       end
