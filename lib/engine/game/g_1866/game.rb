@@ -266,11 +266,11 @@ module Engine
             value: 140,
             revenue: 0,
             desc: 'No corporation may use the revenue from the offboard Madrid while this'\
-                  'private is bought. If owned by a corporation, it receives the brown value'\
-                  'when running a train to the offboard Madrid. The owning Corporation'\
-                  'may also upgrade 1 tile and subsquently place 1 token on a free space'\
-                  'on that tile if available (no track conection needed and this upgrade'\
-                  'is in addition to its normal OR actions)',
+                  ' private is owned by a player. If owned by a corporation, it receives'\
+                  ' the brown value when running a train to Madrid. The owning Corporation'\
+                  ' may also upgrade 1 tile and subsquently place 1 token on a free space'\
+                  ' on that tile if available (no track conection needed and this upgrade'\
+                  ' is in addition to its normal OR actions)',
             sym: 'FMSB',
             abilities: [{ type: 'hex_bonus', amount: 50, hexes: ['A11'] },
                         {
@@ -302,7 +302,7 @@ module Engine
                                     450
                                     627
                                     628],
-                          when: %w[special_track owning_corp_or_turn],
+                          when: %w[special_fmsb owning_corp_or_turn],
                           count: 2,
                         }],
             color: nil,
