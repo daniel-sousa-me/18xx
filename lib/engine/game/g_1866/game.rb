@@ -610,7 +610,7 @@ module Engine
         end
 
         def corporation_available?(corp)
-          return false if corp.id == 'TBF' && @tbf_company&.owner != @round.current_entity
+          return false if corp.id == 'TBF' && @tbf_company&.owner != @round.current_entity && !corp.ipoed
 
           super
         end
