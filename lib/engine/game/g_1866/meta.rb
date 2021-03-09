@@ -8,7 +8,7 @@ module Engine
       module Meta
         include Game::Meta
 
-        DEV_STAGE = :unique
+        DEV_STAGE = :prototype
 
         GAME_DESIGNER = 'João Cardoso'
         GAME_INFO_URL = 'https://github.com/tobymao/18xx/wiki/1866'

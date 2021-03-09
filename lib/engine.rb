@@ -24,7 +24,7 @@ module Engine
   GAME_METAS = GAME_META_BY_TITLE.values
 
   VISIBLE_GAMES = GAME_METAS.select do |game_meta|
-    !game_meta::GAME_IS_VARIANT_OF && %i[unique].include?(game_meta::DEV_STAGE)
+    !game_meta::GAME_IS_VARIANT_OF && %i[prototype].include?(game_meta::DEV_STAGE)
   end
 
   def self.game_by_title(title)
