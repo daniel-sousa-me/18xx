@@ -55,7 +55,6 @@ module Engine
           '58' => 1,
           '70' => 1,
           '129' => 1,
-          '130' => 1,
           '432' =>
           {
             'count' => 1,
@@ -552,7 +551,7 @@ module Engine
           @crisis_just_trigerred = true
 
           @corporations.each do |corp|
-            next unless corp.floated?
+            next unless corp.ipoed
 
             old_price = corp.share_price.price
             (corp.num_market_shares + corp.num_ipo_shares).times do
