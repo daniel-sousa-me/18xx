@@ -543,7 +543,6 @@ module Engine
         end
 
         def check_crisis!
-          puts @corporations.map(&:num_player_shares).inject(:+)
           return if @crisis_trigerred || @corporations.map(&:num_player_shares).inject(:+) < 36
 
           @log << '-- Event: La crisis económica de 1866 is here! --'
@@ -565,7 +564,7 @@ module Engine
             end
           end
 
-          next_round!
+          @round.entities.each(&:pass!)
         end
 
         def new_stock_round
@@ -638,9 +637,10 @@ module Engine
 
         def check_other(route)
           return unless route.stops.map(&:hex).map(&:id).include?('A11')
-          return unless fmsb_company.player?
+          return if fmsb_company.closed?
+          return unless fmsb_company.owner.player?
 
-          raise GameError, 'Only the owner of FMSB can run to Madrid'
+          raise GameError, "Can't run to Madrid while FMSB is owned by a player"
         end
 
         def company_sold(company, corporation)
