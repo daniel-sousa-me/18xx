@@ -237,6 +237,15 @@ module Engine
             name: 'Companyia dels Ferrocarrils de Tarragona a Barcelona i França',
             value: 50,
             revenue: 10,
+            desc: 'When bought by a Corporation allows its lowest rank train to never rust. Train limit still applies.',
+            sym: 'MTM',
+            abilities: [{ type: 'blocks_hexes', owner_type: 'player', hexes: ['C4'] }],
+            color: nil,
+          },
+          {
+            name: 'Companyia dels Ferrocarrils de Tarragona a Barcelona i França',
+            value: 100,
+            revenue: 10,
             desc: 'Allows the owner of the private to open TBF. TBF may only be opened by'\
                   "the owner of this private. TBF can't be opened unless TMB and BFF are connected."\
                   'If this private is sold to a Corporation TBF may no longer open.',
@@ -249,15 +258,6 @@ module Engine
                 from: 'par',
               },
             ],
-            color: nil,
-          },
-          {
-            name: 'Companyia dels Ferrocarrils de Tarragona a Barcelona i França',
-            value: 100,
-            revenue: 10,
-            desc: 'When bought by a Corporation allows its lowest rank train to never rust. Train limit still applies.',
-            sym: 'MTM',
-            abilities: [{ type: 'blocks_hexes', owner_type: 'player', hexes: ['C4'] }],
             color: nil,
           },
           {
