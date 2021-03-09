@@ -75,6 +75,8 @@ module Engine
 
         @game.abilities(company, :revenue_change, time: 'sold') { |ability| company.revenue = ability.revenue }
 
+        @game.company_sold(company, entity)
+
         company.remove_ability_when(:sold)
 
         @round.just_sold_company = company

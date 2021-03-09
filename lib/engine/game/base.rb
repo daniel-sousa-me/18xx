@@ -1647,6 +1647,8 @@ module Engine
         self.class::ASSIGNMENT_TOKENS[assignment]
       end
 
+      def company_sold(_company, _corporation); end
+
       private
 
       def init_graph

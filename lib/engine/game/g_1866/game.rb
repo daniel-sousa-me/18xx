@@ -643,6 +643,17 @@ module Engine
 
           raise GameError, 'Only the owner of FMSB can run to Madrid'
         end
+
+        def company_sold(company, corporation)
+          super
+
+          return unless company.id == 'MTM'
+          return if corporation.trains.empty?
+
+          train = corporation.trains.min_by(&:distance)
+          train.rusts_on = nil
+          train.buyable = false
+        end
       end
     end
   end
