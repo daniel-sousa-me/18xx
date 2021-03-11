@@ -234,7 +234,7 @@ module Engine
             color: nil,
           },
           {
-            name: 'Companyia dels Ferrocarrils de Tarragona a Barcelona i França',
+            name: 'La Maquinista Terrestre i Marítima',
             value: 50,
             revenue: 10,
             desc: 'When bought by a Corporation allows its lowest rank train to never rust. Train limit still applies.',
