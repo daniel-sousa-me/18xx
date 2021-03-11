@@ -9,6 +9,8 @@ module Engine
       class Game < Game::Base
         include_meta(G1866::Meta)
 
+        attr_reader :crisis_triggered
+
         register_colors(black: '#37383a',
                         orange: '#f48221',
                         brightGreen: '#76a042',
@@ -33,14 +35,14 @@ module Engine
           '2' => 1,
           '3' => 1,
           '4' => 1,
-          '7' => 7,
-          '8' => 7,
-          '9' => 7,
+          '7' => 10,
+          '8' => 10,
+          '9' => 10,
           '14' => 2,
           '15' => 2,
           '16' => 2,
           '17' => 1,
-          '18' => 1,
+          '18' => 2,
           '19' => 2,
           '20' => 2,
           '21' => 1,
@@ -59,7 +61,7 @@ module Engine
           {
             'count' => 1,
             'color' => 'brown',
-            'code' => 'city=revenue:40,slots:2,loc:1;city=revenue:40,slots:2,loc:4;'\
+            'code' => 'city=revenue:60,slots:2,loc:1;city=revenue:60,slots:2,loc:4;'\
                       'path=a:0,b:_0;path=a:1,b:_0;path=a:2,b:_0;path=a:3,b:_1;'\
                       'path=a:4,b:_1;path=a:5,b:_1;path=a:_0,b:_1;label=C',
           },
@@ -67,8 +69,11 @@ module Engine
           '449' => 2,
           '450' => 2,
           '619' => 2,
+          '625' => 2,
+          '626' => 1,
           '627' => 1,
           '628' => 1,
+          '629' => 1,
           '630' => 1,
           '632' => 1,
           '633' => 1,
@@ -79,22 +84,21 @@ module Engine
           'F2' => 'Andorra',
           'K3' => 'Perpignan',
           'G5' => 'Berga',
-          'K5' => 'Figueras',
           'D6' => 'Balaguer',
-          'I7' => 'Olot',
-          'K7' => 'Girona',
-          'E9' => 'Igualada',
-          'G9' => 'Manrea',
-          'B10' => 'Lleida',
-          'J10' => 'Mataro',
+          'K5' => 'Girona',
+          'F8' => 'Igualada',
+          'H8' => 'Manrea',
+          'C9' => 'Lleida',
+          'I5' => 'St Joan de las Abadesas',
+          'J8' => 'Mataro',
           'A11' => 'Madrid',
-          'H12' => 'Barcelona',
-          'D14' => 'Reus',
-          'E15' => 'Tarragona',
-          'B16' => 'Tortosa',
-          'A17' => 'Valencia',
+          'H10' => 'Barcelona',
+          'E11' => 'Reus',
+          'F12' => 'Tarragona',
+          'C13' => 'Tortosa',
+          'A15' => 'Valencia',
           'H2' => 'Livia',
-          'C17' => "L'Ampolla",
+          'C15' => "L'Ampolla",
         }.freeze
 
         MARKET = [
@@ -228,9 +232,9 @@ module Engine
             name: 'Companyia dels Camins de Ferro de Barcelona a Mataró',
             value: 20,
             revenue: 5,
-            desc: 'Blocks I11 while owned by a player.',
+            desc: 'Blocks I9 while owned by a player.',
             sym: 'FBM',
-            abilities: [{ type: 'blocks_hexes', owner_type: 'player', hexes: ['I11'] }],
+            abilities: [{ type: 'blocks_hexes', owner_type: 'player', hexes: ['I9'] }],
             color: nil,
           },
           {
@@ -271,7 +275,7 @@ module Engine
                   ' on that tile if available (no track conection needed and this upgrade'\
                   ' is in addition to its normal OR actions)',
             sym: 'FMSB',
-            abilities: [{ type: 'hex_bonus', amount: 50, hexes: ['A11'] },
+            abilities: [{ type: 'blocks_hexes', owner_type: :player, hexes: ['B10'] },
                         {
                           type: 'tile_lay',
                           owner_type: 'corporation',
@@ -330,7 +334,7 @@ module Engine
             name: 'BFF',
             logo: '1866/BFF',
             tokens: [0, 40, 80],
-            coordinates: 'K7',
+            coordinates: 'K5',
             color: '#f48221',
             reservation_color: nil,
           },
@@ -340,7 +344,7 @@ module Engine
             name: 'LRT',
             logo: '1866/LRT',
             tokens: [0, 40, 80],
-            coordinates: 'D14',
+            coordinates: 'E11',
             color: :yellow,
             reservation_color: nil,
           },
@@ -350,7 +354,7 @@ module Engine
             name: 'CFSB',
             logo: '1866/CFSB',
             tokens: [0, 40, 80, 120],
-            coordinates: 'B10',
+            coordinates: 'C9',
             color: :lightgray,
             reservation_color: nil,
           },
@@ -370,7 +374,7 @@ module Engine
             name: 'FSB',
             logo: '1866/FSB',
             tokens: [0, 40],
-            coordinates: 'H12',
+            coordinates: 'H10',
             color: :gray,
             reservation_color: nil,
           },
@@ -380,7 +384,7 @@ module Engine
             name: 'TMB',
             logo: '1866/TMB',
             tokens: [0, 40, 80],
-            coordinates: 'E15',
+            coordinates: 'F12',
             color: '#d81e3e',
             reservation_color: nil,
           },
@@ -397,72 +401,52 @@ module Engine
 
         HEXES = {
           white: {
-            %w[H6
-               L6
-               C7
-               G7
-               F8
-               H8
-               C9
-               K9
-               F10
-               H10
-               I11
-               F12
-               G13
-               F14] => '',
-            %w[D2 E3 H4 J4 I9] => 'upgrade=cost:40,terrain:mountain',
-            %w[K5 K7 G9 J10] => 'city=revenue:0',
-            %w[G5 D14] => 'city=revenue:40;upgrade=cost:40,terrain:mountain',
-            ['L8'] => 'town=revenue:0',
+            %w[H6 J6 G7 D8 K7 I9] => '',
+            %w[D2 E3 H4 J4 I7 G9] => 'upgrade=cost:40,terrain:mountain',
+            %w[K5 F8 H8 J8] => 'city=revenue:0',
+            %w[G5] => 'city=revenue:40;upgrade=cost:40,terrain:mountain',
+            %w[E11] => 'city=revenue:40;upgrade=cost:40,terrain:mountain;border=edge:2,type:water,cost:20',
+            ['L6'] => 'town=revenue:0',
             %w[G3 L4] => 'town=revenue:0;upgrade=cost:40,terrain:mountain',
             ['I5'] =>
                    'town=revenue:0;upgrade=cost:40,terrain:mountain;icon=image:1866/mine,sticky:1',
-            %w[D4 E13] => 'town=revenue:0;town=revenue:0',
-            ['G11'] => 'town=revenue:0;town=revenue:0;upgrade=cost:40,terrain:mountain',
+            %w[D4] => 'town=revenue:0;town=revenue:0',
+            %w[F10] => 'stub=edge:0;town=revenue:0;town=revenue:0',
+            %w[G11] => 'stub=edge:1;town=revenue:0;town=revenue:0',
             ['F4'] =>
                    'town=revenue:0;town=revenue:0;upgrade=cost:40,terrain:mountain;border=edge:1,type:water,cost:20',
-            %w[F6 E11] => 'border=edge:2,type:water,cost:20',
-            %w[E7 C13] =>
+            %w[F6] => 'border=edge:2,type:water,cost:20',
+            %w[E7 D12] =>
                    'border=edge:1,type:water,cost:20;border=edge:2,type:water,cost:20;border=edge:3,type:water,cost:20',
-            %w[D12 J8] =>
-                   'border=edge:2,type:water,cost:20;border=edge:3,type:water,cost:20',
-            ['J6'] => 'border=edge:0,type:water,cost:20',
-            ['C15'] =>
-                   'border=edge:1,type:water,cost:20;border=edge:2,type:water,cost:20',
-            ['B12'] =>
+            ['C11'] =>
                    'border=edge:3,type:water,cost:20;border=edge:4,type:water,cost:20;border=edge:5,type:water,cost:20',
-            %w[D8 B14] =>
-                   'border=edge:4,type:water,cost:20;border=edge:5,type:water,cost:20',
-            ['D10'] =>
-                   'border=edge:0,type:water,cost:20;border=edge:4,type:water,cost:20;border=edge:5,type:water,cost:20',
             ['E9'] =>
-                   'city=revenue:0;border=edge:1,type:water,cost:20;border=edge:2,type:water,cost:20',
-            %w[D6 I7] => 'city=revenue:0;border=edge:5,type:water,cost:20',
-            ['B10'] => 'city=revenue:0;border=edge:0,type:water,cost:20',
-            ['B16'] => 'city=revenue:0;border=edge:4,type:water,cost:20',
-            ['C11'] => 'town=revenue:0;town=revenue:0;border=edge:0,type:water,cost:20;'\
-                       'border=edge:1,type:water,cost:20;border=edge:5,type:water,cost:20',
+                   'border=edge:1,type:water,cost:20;border=edge:2,type:water,cost:20',
+            %w[D6] => 'city=revenue:0;border=edge:5,type:water,cost:20',
+            ['C9'] => 'city=revenue:0;border=edge:0,type:water,cost:20',
+            ['C13'] => 'city=revenue:0;border=edge:4,type:water,cost:20',
+            ['D10'] => 'town=revenue:0;town=revenue:0;border=edge:0,type:water,cost:20;'\
+              'border=edge:1,type:water,cost:20;border=edge:4,type:water,cost:20;border=edge:5,type:water,cost:20',
             ['E5'] => 'upgrade=cost:40,terrain:mountain;border=edge:0,type:water,cost:20;'\
                       'border=edge:4,type:water,cost:20;border=edge:5,type:water,cost:20',
           },
-          yellow: { ['H12'] =>
+          yellow: { ['H10'] =>
             'city=revenue:30;city=revenue:30;path=a:2,b:_0;path=a:4,b:_1;label=C',
    },
           gray: {
-            ['E15'] => 'city=revenue:40,slots:1;path=a:3,b:_0;path=a:4,b:_0',
+            ['F12'] => 'city=revenue:40,slots:1;path=a:3,b:_0;path=a:4,b:_0',
             ['H2'] => 'town=revenue:10;path=a:0,b:_0;path=a:_0,b:1',
-            ['C17'] => 'town=revenue:10;path=a:2,b:_0;path=a:_0,b:3',
+            ['D14'] => 'town=revenue:10;path=a:2,b:_0;path=a:_0,b:3',
           },
           red: {
             ['C1'] => 'offboard=revenue:yellow_30|brown_50;path=a:5,b:_0',
             ['K3'] => 'offboard=revenue:yellow_30|brown_80;path=a:5,b:_0',
-            ['A11'] => 'offboard=revenue:yellow_30|brown_80;path=a:4,b:_0;path=a:5,b:_0',
-            ['A17'] => 'offboard=revenue:yellow_20|brown_40;path=a:4,b:_0',
+            ['B10'] => 'offboard=revenue:yellow_30|brown_60;path=a:4,b:_0;path=a:5,b:_0',
+            ['B14'] => 'offboard=revenue:yellow_20|brown_40;path=a:4,b:_0',
           },
           blue: {
-            ['H14'] => 'offboard=revenue:30;path=a:3,b:_0',
-            ['I13'] => 'offboard=revenue:30;path=a:2,b:_0',
+            ['H12'] => 'offboard=revenue:30;path=a:3,b:_0',
+            ['I11'] => 'offboard=revenue:30;path=a:2,b:_0',
           },
           brown: {
             ['F2'] => 'offboard=revenue:yellow_20|brown_40,visit_cost:0;path=a:0,b:_0;icon=image:1866/coins',
@@ -477,9 +461,11 @@ module Engine
                    'the same amount of steps as shares unsold (either on the Corporation treasury or the Bank pool).']
         ).freeze
 
-        CE_POSSIBLE_PHASES = %w[3 4 5].freeze
+        CRISIS_SHARE_TRIGGER = 36
+        SELL_BUY_ORDER = :sell_buy_sell
+        TRACK_RESTRICTION = :permissive
 
-        TILE_LAYS = [{ lay: true, upgrade: true, cost: 0 }, { lay: :not_if_upgraded, upgrade: false, cost: 0 }].freeze
+        TILE_LAYS = [{ lay: true, upgrade: true, cost: 0 }, { lay: :true, upgrade: :not_if_upgraded_city, cost: 0 }].freeze
 
         def stock_round
           Round::Stock.new(self, [
@@ -522,8 +508,8 @@ module Engine
         end
 
         def setup
-          @crisis_trigerred = false
-          @crisis_just_trigerred = false
+          @crisis_triggered = false
+          @crisis_just_triggered = false
         end
 
         def home_token_locations(corporation)
@@ -542,12 +528,16 @@ module Engine
           @tbf_company = nil if corporation.name == 'TBF'
         end
 
+        def num_player_shares
+          @corporations.map(&:num_player_shares).inject(:+)
+        end
+
         def check_crisis!
-          return if @crisis_trigerred || @corporations.map(&:num_player_shares).inject(:+) < 36
+          return if @crisis_triggered || num_player_shares < CRISIS_SHARE_TRIGGER
 
           @log << '-- Event: La crisis económica de 1866 is here! --'
-          @crisis_trigerred = true
-          @crisis_just_trigerred = true
+          @crisis_triggered = true
+          @crisis_just_triggered = true
 
           @corporations.each do |corp|
             next unless corp.ipoed
@@ -568,8 +558,8 @@ module Engine
         end
 
         def new_stock_round
-          if @crisis_just_trigerred
-            @crisis_just_trigerred = false
+          if @crisis_just_triggered
+            @crisis_just_triggered = false
 
             player = @players.reject(&:bankrupt).min_by(&:cash)
             @players.rotate!(@players.index(player))

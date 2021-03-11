@@ -17,6 +17,7 @@ module Engine
         @round.num_laid_track = 0
         @round.upgraded_track = false
         @round.laid_hexes = []
+        @laid_city = false
       end
 
       def can_lay_tile?(entity)
@@ -35,6 +36,7 @@ module Engine
 
         action[:lay] = !@round.upgraded_track if action[:lay] == :not_if_upgraded
         action[:upgrade] = !@round.upgraded_track if action[:upgrade] == :not_if_upgraded
+        action[:upgrade] = !@round.upgraded_track || !@laid_city if action[:upgrade] == :not_if_upgraded_city
         action[:cost] = action[:cost] || 0
         action[:cannot_reuse_same_hex] = action[:cannot_reuse_same_hex] || false
         action
@@ -51,6 +53,7 @@ module Engine
 
         lay_tile(action, extra_cost: tile_lay[:cost], entity: entity, spender: spender)
         upgraded_track(action)
+        @laid_city = true if action.tile.cities.any?
         @round.num_laid_track += 1
         @round.laid_hexes << action.hex
       end

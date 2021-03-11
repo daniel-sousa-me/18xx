@@ -37,6 +37,12 @@ module View
             h('td.right', @game.format_currency(@game.bank_cash)),
           ])
         end
+        if @game.crisis_triggered
+          trs << h(:tr, [
+            h(:td, 'Player held shares'),
+            h('td.right', "#{@game.num_player_shares} / #{@game.CRISIS_PLAYER_TRIGGER}"),
+          ])
+        end
         if (rate = @game.interest_rate)
           trs << h(:tr, [
             h(:td, 'Interest per Loan'),
