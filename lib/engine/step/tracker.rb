@@ -36,7 +36,6 @@ module Engine
 
         action[:lay] = !@round.upgraded_track if action[:lay] == :not_if_upgraded
         action[:upgrade] = !@round.upgraded_track if action[:upgrade] == :not_if_upgraded
-        action[:upgrade] = !@round.upgraded_track || !@laid_city if action[:upgrade] == :not_if_upgraded_city
         action[:cost] = action[:cost] || 0
         action[:cannot_reuse_same_hex] = action[:cannot_reuse_same_hex] || false
         action
