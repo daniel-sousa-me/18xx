@@ -1,6 +1,7 @@
 {
     "name": "18xx.games",
     "short_name": "18xx.games",
+    "start_url": "/offline",
     "icons": [
         {
             "src": "/images/android-chrome-192x192.png",

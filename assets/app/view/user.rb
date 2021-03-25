@@ -333,5 +333,123 @@ module View
         edit_user(params)
       end
     end
+
+    def render_webpush
+      %x{
+      if("navigator" in window) {
+          navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
+            serviceWorkerRegistration.pushManager
+            .getSubscription()
+            .then((subscription) => {
+              if(subscription && subscription.endpoint != #{@webpush_subscription}) {
+                self['$store']('webpush_subscription', subscription.endpoint);
+              }
+            });
+          });
+        }
+
+        if ("Notification" in window && Notification.permission != #{@notification_permission}) {
+          self['$store']('notification_permission', Notification.permission);
+        }
+      }
+
+      webpush_subscriptions = @user&.dig(:settings, :webpush_subscriptions) || []
+
+      subscribed = false
+      rows = webpush_subscriptions.map do |l|
+        current_device = l[:subscription][:endpoint] == @webpush_subscription
+        subscribed = true if current_device
+
+        h(:li, [
+          l[:device] + (current_device ? ' (This device) ' : ' '),
+          render_button('Remove') { webpush_unsubscribe(l[:device], current_device) },
+        ])
+      end
+
+      h(:div, [
+        h(:H2, 'Background notifications'),
+        h(:ul, rows),
+        render_webpush_subscribe(subscribed),
+      ])
+    end
+
+    def render_webpush_subscribe(subscribed)
+      return h(:div, 'This device doesn\'t support background notifications') unless @serviceworker
+
+      return h(:div, 'You have denied permission to show notifications') if @notification_permission == 'denied'
+
+      unless @notification_permission == 'granted'
+        return render_button('Allow browser notifications') { ask_notifications_permission }
+      end
+
+      return h(:div, 'Push notifications are enabled for this device') if subscribed
+
+      device_input = h(:input, { attrs: { type: :text } })
+
+      h(:div, [
+        'Device name:',
+        device_input,
+        render_button('Add device') { webpush_subscribe(Native(device_input).elm.value) },
+      ])
+    end
+
+    def ask_notifications_permission
+      %x{
+        if ("Notification" in window) {
+          if (Notification.permission === "default") {
+            Notification.requestPermission().then(function(permission) {
+              self['$store']('notification_permission', permission);
+            })
+          }
+        }
+      }
+    end
+
+    # rubocop:disable Lint/UnusedMethodArgument
+    def webpush_subscribe(device)
+      %x{
+        if("navigator" in window) {
+          navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
+            console.log(vapid_public_key);
+            serviceWorkerRegistration.pushManager
+            .subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: #{@vapid_public_key}
+            })
+            .then((subscription) => {
+              self['$webpush_subscribe_save'](device, subscription.toJSON())
+            });
+          });
+        }
+      }
+    end
+    # rubocop:enable Lint/UnusedMethodArgument
+
+    def webpush_subscribe_save(device, subscription)
+      webpush_subscriptions = @user[:settings][:webpush_subscriptions] || []
+      webpush_subscriptions << { device: device, subscription: subscription }
+
+      edit_user({ webpush_subscriptions: webpush_subscriptions })
+    end
+
+    def webpush_unsubscribe(device, current_device)
+      subscriptions = @user[:settings][:webpush_subscriptions]
+      edit_user({ webpush_subscriptions: subscriptions.reject { |s| s[:device] == device } })
+      return unless current_device
+
+      %x{
+        if("navigator" in window) {
+          navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
+            serviceWorkerRegistration.pushManager
+            .getSubscription()
+            .then((subscription) => {
+              if(subscription) {
+                subscription.unsubscribe();
+              }
+            });
+          });
+        }
+      }
+    end
   end
 end

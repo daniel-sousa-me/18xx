@@ -7,7 +7,7 @@ module View
   class CreateGame < Form
     include GameManager
 
-    needs :mode, default: :multi, store: true
+    needs :mode, default: nil, store: true
     needs :num_players, default: 3, store: true
     needs :flash_opts, default: {}, store: true
     needs :user, default: nil, store: true
@@ -17,8 +17,11 @@ module View
     needs :selected_variant, default: nil, store: true
     needs :title, default: nil
     needs :production, default: nil
+    needs :offline, default: false
 
     def render_content
+      @mode = @user && !@offline ? :multi : :hotseat if @mode.nil?
+
       @label_style = { display: 'block' }
       inputs = [
         mode_selector,
@@ -62,7 +65,10 @@ module View
       end
 
       description = []
-      unless @user
+
+      if @offline
+        description += [h(:h3, "You are currently offline. Multiplayer is not available until you come back online")]
+      elsif !@user
         description += [
           h(:a, { attrs: { href: '/signup' } }, 'Signup'), ' or ',
           h(:a, { attrs: { href: '/login' } }, 'login'), ' to play multiplayer.'
@@ -262,7 +268,7 @@ module View
 
     def mode_selector
       h(:div, { style: { margin: '1rem 0' } }, [
-        *mode_input(:multi, 'Multiplayer'),
+        *(@user && !@offline ? mode_input(:multi, 'Multiplayer') : []),
         *mode_input(:hotseat, 'Hotseat'),
         *mode_input(:json, 'Import hotseat game'),
       ])

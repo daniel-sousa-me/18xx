@@ -102,6 +102,7 @@ task :precompile do
   File.write(Assets::OUTPUT_BASE + '/assets/version.json', JSON.dump(
     hash: git_rev,
     url: "https://github.com/tobymao/18xx/commit/#{git_rev}",
+    static_files: Dir.glob('{assets,icons,images,logos}/**/*', base: 'public/') + %w[apple-touch-icon.png apple-touch-icon_red.png favicon.ico offline],
   ))
   FileUtils.mkdir_p(pin_dir)
   assets.pin("#{pin_dir}#{git_rev}.js")
