@@ -32,6 +32,7 @@ module Engine
         MUST_SELL_IN_BLOCKS = true
 
         TILES = {
+          '1' => 1,
           '2' => 1,
           '3' => 1,
           '4' => 1,
@@ -52,6 +53,7 @@ module Engine
           '45' => 2,
           '46' => 2,
           '47' => 1,
+          '55' => 1,
           '56' => 1,
           '57' => 5,
           '58' => 1,
@@ -79,8 +81,6 @@ module Engine
           '627' => 1,
           '628' => 1,
           '629' => 1,
-          '630' => 1,
-          '632' => 1,
           '633' => 1,
         }.freeze
 
@@ -378,7 +378,7 @@ module Engine
             ['B14'] => 'offboard=revenue:yellow_20|brown_40;path=a:4,b:_0',
           },
           blue: {
-            ['H12'] => 'offboard=revenue:30;path=a:3,b:_0',
+            ['H12'] => 'offboard=revenue:30;path=a:2,b:_0;path=a:3,b:_0',
             ['I11'] => 'offboard=revenue:30;path=a:2,b:_0',
           },
           brown: {
