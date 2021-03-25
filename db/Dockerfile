@@ -1,12 +1,11 @@
 FROM postgres:13.1
 
-# use uid 1000 to (hopefully) match host user (ie, you)
-RUN useradd --uid 1000 --user-group --create-home --home-dir /home/db db
+RUN useradd --uid 33 --user-group --create-home --home-dir /home/db db
 
-RUN chown db:db /var/lib/postgresql/data && \
-    chown db:db /var/run/postgresql
+RUN chown www-data:www-data /var/lib/postgresql/data && \
+    chown www-data:www-data /var/run/postgresql
 
-USER db:db
+USER www-data:www-data
 
 COPY ./postgresql.conf /etc/postgresql/postgresql.conf
 
