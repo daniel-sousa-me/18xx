@@ -6,6 +6,7 @@ module View
   class Welcome < Snabberb::Component
     needs :app_route, default: nil, store: true
     needs :show_intro, default: true
+    needs :offline, default: false
 
     def render
       children = [render_notification]
@@ -84,7 +85,7 @@ module View
 
       create_props = {
         on: {
-          click: -> { store(:app_route, '/new_game') },
+          click: -> { store(:app_route, @offline ? '/new_game_offline' : 'new_game') },
         },
       }
 

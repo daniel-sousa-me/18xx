@@ -260,14 +260,7 @@ module View
 
     def render_webpush
       %x{
-        if("navigator" in window) {
-          if (navigator.serviceWorker && #{@serviceworker.nil?}) {
-            navigator.serviceWorker.register('/serviceworker.js')
-            .then(function(reg) {
-              self['$store']('serviceworker', true)
-            });
-          }
-
+      if("navigator" in window) {
           navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
             serviceWorkerRegistration.pushManager
             .getSubscription()

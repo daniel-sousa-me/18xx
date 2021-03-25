@@ -29,6 +29,7 @@ class App < Snabberb::Component
   needs :pin, default: nil
   needs :title, default: nil
   needs :production, default: nil
+  needs :serviceworker, default: nil, store: true
   needs :vapid_public_key, default: nil, store: true
 
   def render
@@ -62,6 +63,8 @@ class App < Snabberb::Component
 
     page =
       case @app_route
+      when /new_game_offline/
+        h(View::CreateGame, title: @title, production: @production, offline: true)
       when /new_game/
         h(View::CreateGame, title: @title, production: @production)
       when /[^?](game|hotseat|tutorial|fixture)/
@@ -84,6 +87,8 @@ class App < Snabberb::Component
         h(View::MapPage, route: @app_route)
       when /market/
         h(View::MarketPage, route: @app_route)
+      when /offline/
+        h(View::Home, user: @user, offline: true)
       else
         h(View::Home, user: @user)
       end
@@ -128,6 +133,15 @@ class App < Snabberb::Component
 
       if (location.pathname + location.search + location.hash != #{@app_route}) {
         window.history.pushState(#{@game_data.to_n}, #{@app_route}, #{@app_route})
+      }
+
+      if("navigator" in window) {
+        if (navigator.serviceWorker && #{@serviceworker.nil?}) {
+          navigator.serviceWorker.register('/serviceworker.js')
+          .then(function(reg) {
+            self['$store']('serviceworker', true)
+          });
+        }
       }
     }
   end

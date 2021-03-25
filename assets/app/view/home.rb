@@ -14,6 +14,7 @@ module View
 
     needs :user
     needs :refreshing, default: nil, store: true
+    needs :offline, default: false, store: true
 
     def render
       your_games, other_games = @games.partition { |game| user_in_game?(@user, game) || user_owns_game?(@user, game) }
@@ -21,22 +22,38 @@ module View
       children = [
         render_header,
         h(Welcome, show_intro: your_games.size < 2),
-        h(Chat, user: @user, connection: @connection),
       ]
 
-      # these will show up in the profile page
-      your_games.reject! { |game| %w[finished archived].include?(game['status']) }
+      if @offline
+        props = {
+          style: {
+            verticalAlign: 'top',
+            backgroundColor: color_for(:bg2),
+            color: color_for(:font2),
+          },
+        }
 
-      grouped = other_games.group_by { |game| game['status'] }
+        children << h('div#chat.half', props,
+                      [h(:h2, { style: { padding: '1em', textAlign: 'center' } },
+                         "You are currently offline. "\
+                         "You won't be able to see your multiplayer games, but you can still play on hotseat")])
+      else
+        children << h(Chat, user: @user, connection: @connection)
 
-      # Ready, then active, then unstarted, then completed
-      your_games.sort_by! do |game|
-        [
-          user_is_acting?(@user, game) ? -game['updated_at'] : 0,
-          game['status'] == 'active' ? -game['updated_at'] : 0,
-          game['status'] == 'new' ? -game['created_at'] : 0,
-          -game['updated_at'],
-        ]
+        # these will show up in the profile page
+        your_games.reject! { |game| %w[finished archived].include?(game['status']) }
+
+        grouped = other_games.group_by { |game| game['status'] }
+
+        # Ready, then active, then unstarted, then completed
+        your_games.sort_by! do |game|
+          [
+            user_is_acting?(@user, game) ? -game['updated_at'] : 0,
+            game['status'] == 'active' ? -game['updated_at'] : 0,
+            game['status'] == 'new' ? -game['created_at'] : 0,
+            -game['updated_at'],
+          ]
+        end
       end
 
       hotseat = Lib::Storage
@@ -46,19 +63,21 @@ module View
         .sort_by { |gd| gd[:id] }
         .reverse
 
-      render_row(children, 'Your Games', your_games, :personal) if @user
+      render_row(children, 'Your Games', your_games, :personal) if @user && !@offline
       render_row(children, 'Hotseat Games', hotseat, :hotseat) if hotseat.any?
-      render_row(children, 'New Games', grouped['new'], :new) if @user
-      render_row(children, 'Active Games', grouped['active'], :active)
-      render_row(children, 'Finished Games', grouped['finished'], :finished)
+      unless @offline
+        render_row(children, 'New Games', grouped['new'], :new) if @user
+        render_row(children, 'Active Games', grouped['active'], :active)
+        render_row(children, 'Finished Games', grouped['finished'], :finished)
+
+        acting = your_games.any? { |game| user_is_acting?(@user, game) }
+        `document.title = #{(acting ? '* ' : '') + '18xx.Games'}`
+        change_favicon(acting)
+        change_tab_color(acting)
+      end
 
       game_refresh
       get_games if @games.empty?
-
-      acting = your_games.any? { |game| user_is_acting?(@user, game) }
-      `document.title = #{(acting ? '* ' : '') + '18xx.Games'}`
-      change_favicon(acting)
-      change_tab_color(acting)
 
       destroy = lambda do
         `clearTimeout(#{@refreshing})`

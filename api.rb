@@ -65,7 +65,7 @@ class Api < Roda
   use Rack::Deflater unless PRODUCTION
 
   STANDARD_ROUTES = %w[
-    / about hotseat login new_game profile signup tutorial forgot reset
+    / about hotseat offline login new_game new_game_offline profile signup tutorial forgot reset
   ].freeze
 
   ROUTES_WITH_GAME_TITLES = %w[
