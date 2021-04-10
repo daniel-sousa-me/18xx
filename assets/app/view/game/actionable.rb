@@ -36,9 +36,13 @@ module View
       end
 
       def check_consent(player, click)
+        log_consent = lambda do
+          @game.log << "-- #{player.name} has given consent to this action"
+          click()
+        end
         opts = {
           color: :yellow,
-          click: click,
+          click: log_consent,
           message: "This action requires consent from #{player.name}!",
         }
         store(:confirm_opts, opts, skip: false)
