@@ -7,6 +7,10 @@ module Engine
         name: 'All-Aboard Games',
         url: 'https://all-aboardgames.com/',
       },
+      fox_in_the_box: {
+        name: 'Fox in the Box',
+        url: 'https://foxinthebox.cz/',
+      },
       gmt_games: {
         name: 'GMT Games',
         url: 'https://www.gmtgames.com/',
