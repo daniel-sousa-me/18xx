@@ -3,6 +3,7 @@
 require 'lib/settings'
 require 'lib/text'
 require 'view/game/companies'
+require 'view/game/clock'
 
 module View
   module Game
@@ -87,7 +88,17 @@ module View
           },
         }
 
+        secs = @player.time_spent.to_i
+        mins = (secs / 60).to_i
+        hours = (mins / 60).to_i
+        days = (hours / 24).to_i
+
         trs = [
+          h(:tr, [
+            h('td.center',
+              { attrs: { colSpan: 2 } },
+              [h(Clock, time_spent: @player.time_spent, counting: @game.active_players.include?(@player) && !@game.finished && @game.current_action&.created_at)]),
+          ]),
           h(:tr, [
             h(:td, 'Cash'),
             h('td.right', @game.format_currency(@player.cash)),

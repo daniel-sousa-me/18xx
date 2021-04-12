@@ -669,6 +669,7 @@ module Engine
         return clone(@raw_actions) if action.is_a?(Action::Undo) || action.is_a?(Action::Redo)
 
         @actions << action
+        action.entity.player.time_spent +=  action.created_at - @current_action.created_at if @current_action && action.entity.player
 
         # Process the main action we came here to do first
         process_single_action(action)
