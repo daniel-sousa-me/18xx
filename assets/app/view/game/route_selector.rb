@@ -277,9 +277,7 @@ module View
           h('button.small', { on: { click: clear_all } }, 'Clear All'),
           h('button.small', { on: { click: reset_all } }, 'Reset'),
         ]
-        if @game_data.dig('settings', 'auto_routing') || @game_data['mode'] == :hotseat
-          buttons << h('button.small', { on: { click: auto } }, 'Auto')
-        end
+        buttons << h('button.small', { on: { click: auto } }, 'Auto')
         h(:div, { style: { overflow: 'auto', marginBottom: '1rem' } }, [
           h(:div, buttons),
           h(:button, { style: submit_style, on: { click: submit } }, 'Submit ' + revenue + subsidy),
